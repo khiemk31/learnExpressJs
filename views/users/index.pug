@@ -1,5 +1,8 @@
 h1 List 
+form(action='/users/search',method='GET')
+    input(type="text",name='q')
+    button Search 
 ul 
     each user in users
-        li= user.id
-        //- li= user.name 
+        li= user.name 
+           
