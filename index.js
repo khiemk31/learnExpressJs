@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 app.get('/users', (req, res) => {
   res.render('users/index',{
     users:[
-      {id:1,name:'fadfas'},
+      {id:1,name:'fadfas',},
       {id:2,name:'adfasd'},
       {id:3,name:'d'},
       {id:4,name:'adsfasdf'},
@@ -22,6 +22,7 @@ app.get('/users', (req, res) => {
   })
 })
 
+app.get('/user/search')
 
 app.listen(port, () => {
   console.log(`VD tại port : ${port}`)
