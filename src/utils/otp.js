@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const {private_key} = require('../../config');
-const {isEmpty} = require('../validate');
-const {messagingServiceSid} = require('../../config');
+const {private_key} = require('../config');
+const {isEmpty} = require('../utils/validate');
+const {messagingServiceSid} = require('../config');
 
 function generateOTP() {
   const OTP = Math.round(100000 + Math.random() * 899999);

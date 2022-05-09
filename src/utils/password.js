@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const {isEmpty} = require('../utils/validate');
 
 const encodePassword = (password) => {
   return new Promise((resolve, reject) => {

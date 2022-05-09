@@ -21,5 +21,12 @@ const messagingServiceSid = 'MG059e5c8e3ed10244b8ad968aabf85591';
 const authToken = '90fe6554d2ce805d455c82dd35923066';
 
 const private_key = 'admin';
+//tk twilo
+// ginhotaru282@gmail.com
+// dangtrungkien300197
+
+//cloudinary
+//ginhotaru282@gmail.com
+// Matkhau123@
 
 module.exports = {port, mysqlConfig, cloudinary, private_key, accountSid, messagingServiceSid, authToken};
