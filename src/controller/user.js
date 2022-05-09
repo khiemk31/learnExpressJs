@@ -13,7 +13,7 @@ const register = async (req, res) => {
     const user = await query(connection, UserSQL.getUserQuerySQL, [phone]);
     if (!isEmpty(user)) return res.status(409).json({message: 'Phone or email existed'});
     const newPassword = await encodePassword(password);
-    const newUser = {user_id: uuid(), phone, password: newPassword, role: 2, gender, active: 0, created_at: new Date()};
+    const newUser = {user_id: uuid(), phone, password: newPassword, role: 2,  active: 0, created_at: new Date()};
     await query(connection, UserSQL.insertUserSQL, newUser);
     return res.status(200).json({message: 'success'});
   } catch (e) {
@@ -28,7 +28,7 @@ const registerAdmin = async (req, res) => {
     const user = await query(connection, UserSQL.getUserQuerySQL, [phone]);
     if (!isEmpty(user)) return res.status(409).json({message: 'Phone or email existed'});
     const newPassword = await encodePassword(password);
-    const newUser = {user_id: uuid(), phone, password: newPassword, role: 1, gender, active: 0, created_at: new Date()};
+    const newUser = {user_id: uuid(), phone, password: newPassword, role: 1,  active: 0, created_at: new Date()};
     await query(connection, UserSQL.insertUserSQL, newUser);
     return res.status(200).json({message: 'success'});
   } catch (e) {
