@@ -126,7 +126,7 @@ const update = async (req, res) => {
     if (isEmpty(user)) return res.status(404).json({message: 'User not found'});
     await query(connection, UserSQL.updateUserSQL, [
       {
-        user_name: user_name || user[0].user_name,
+        user_name: user_name || null,
         gender: gender || user[0].gender,
         date_of_birth: newDateOfBirth || user[0].date_of_birth,
         avatar: newAvatar?.url || avatar || user[0].avatar,
