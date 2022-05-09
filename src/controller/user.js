@@ -61,8 +61,8 @@ const login = async (req, res) => {
     if (isEmpty(user)) {
       return res.status(404).json({message: 'Người dùng không tồn tại'});
     } else {
-      const token = await comparePassword(user[0].body, password);
-      console.log(user[0].body);
+      const token = await comparePassword(user[0], password);
+      console.log(token);
       return res.status(200).json({message: 'Đăng nhập thành công', token});
     }
   } catch (e) {
