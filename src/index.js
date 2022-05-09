@@ -18,4 +18,4 @@ app.use(express.json({extended: true, limit: '5mb'}));
 app.use(express.urlencoded({extended: true, limit: '5mb'}));
 app.use(router);
 
-app.listen(port, () => console.log(`khởi tạo cổng : ${port}`));
+app.listen(port, () => console.log(`khởi tạo cổng: ${port}`));
