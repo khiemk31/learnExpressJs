@@ -6,5 +6,5 @@ module.exports = (router) => {
   router.post('/user/login', user.login);
   router.post('/user/loginAdmin',user.loginAdmin);
   router.post('/user/recoveryPass',user.recoveryPassword);
-  
+  router.post('/user/update',user.update);
 };
