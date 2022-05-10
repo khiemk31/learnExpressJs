@@ -82,7 +82,7 @@ const loginAdmin = async (req, res) => {
     } else {
       await comparePassword(user[0], password);
       user_id1=user[0];
-      return res.status(200).json({message: 'Đăng nhập thành công'});
+      return res.status(200).json({message: 'Đăng nhập thành công',user_id1});
     }
   } catch (e) {
     return res.status(500).json({message: `${e}`});
@@ -129,7 +129,7 @@ const update = async (req, res) => {
     if (isEmpty(user)) return res.status(404).json({message: 'User not found'});
     await query(connection, UserSQL.updateUserSQL, [
       {
-        user_name: user_name || user[0].user_name,
+        user_name: user_name || null,
         gender: gender || user[0].gender,
         date_of_birth: newDateOfBirth || user[0].date_of_birth,
         avatar: newAvatar?.url || avatar || user[0].avatar,
