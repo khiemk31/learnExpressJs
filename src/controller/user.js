@@ -58,11 +58,13 @@ const login = async (req, res) => {
     const {phone, password} = req.body;
     const connection = await getConnection(req);
     const user = await query(connection, UserSQL.getUserQuerySQL, [phone]);
+ 
     if (isEmpty(user)) {
       return res.status(404).json({message: 'Người dùng không tồn tại'});
     } else {
-      const token = await comparePassword(user[0], password);
-      return res.status(200).json({message: 'Đăng nhập thành công', token});
+      await comparePassword(user[0], password);
+      user_id1=user[0];
+      return res.status(200).json({message: 'Đăng nhập thành công', user_id1});
     }
   } catch (e) {
     return res.status(500).json({message: `${e}`});
@@ -78,8 +80,9 @@ const loginAdmin = async (req, res) => {
     if (isEmpty(user)) {
       return res.status(404).json({message: 'Số điện thoại chưa được đăng ký'});
     } else {
-      const token = await comparePassword(user[0], password);
-      return res.status(200).json({message: 'Đăng nhập thành công', token});
+      await comparePassword(user[0], password);
+      user_id1=user[0];
+      return res.status(200).json({message: 'Đăng nhập thành công'});
     }
   } catch (e) {
     return res.status(500).json({message: `${e}`});
