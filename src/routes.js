@@ -11,6 +11,6 @@ module.exports = (router) => {
   //Category
   router.post('/category/add', category.add);
   router.get('/category/getAll', category.getAll);
-  router.post('/category/update/:id', category.update);
+  router.post('/category/update', category.update);
   router.delete('/category/remove/:id', category.remove);
 };
