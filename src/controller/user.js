@@ -165,7 +165,7 @@ const getAllUser = async (req, res) => {
         user.date_of_birth = moment(user.date_of_birth).format('DD-MM-YYYY');
       }
     }
-    return res.status(200).json({data: users});
+    return res.status(200).json(users);
   } catch (e) {
     return res.status(500).json({message: `${e}`});
   }
