@@ -16,7 +16,8 @@ const productsAllQuery =
   'SELECT product.*, category.category_name, color.color, color.color_id, size.size_id, size.size, size,import_quantity, size.sold_quantity FROM product inner join category on product.category_id = category.category_id inner join color on product.product_id = color.product_id inner join size on size.color_id = color.color_id where product.deleted_at is null and color.deleted_at is null and size.deleted_at is null';
 const dealsFavorite = 'select * from favorite where deleted_at is null and user_id =?';
 
-const hotDealsQuery = (limit, offset) => `select * from product where deleted_at is null order by sale_off desc limit ${limit} offset ${offset}`;
+const hotDealsQuery = (limit, offset) =>
+  `select * from product where deleted_at is null order by sale_off desc limit ${limit} offset ${offset}`;
 
 const listCategoryQuery = (limit) =>
   `select product.product_id, product.product_name,product.description,product.price,product.view, product.sale_off,product.image,category.category_id,category.category_name from product INNER JOIN category ON product.category_id = category.category_id where product.category_id = ? and product.deleted_at is null limit ${limit} offset ${offset}`;
@@ -30,10 +31,11 @@ const listSuggestions = (limit, offset) =>
 const updateProductQuery = `UPDATE product SET ? WHERE product_id =?`;
 const checkDelete = 'SELECT * FROM product WHERE deleted_at is null AND product_id= ?';
 
-const getAllProductsBySearchSQL = (search) => `select * from product where deleted_at is null and product_name like '${search}%'`;
+const getAllProductsBySearchSQL = (search) =>
+  `select * from product where deleted_at is null and product_name like '${search}%'`;
 const getProductsBySearchSQL = (search, limit, offset) =>
   `select * from product where deleted_at is null and product_name like '${search}%' order by product_id asc limit ${limit} offset ${offset}`;
-const getAllProduct = `SELECT product.product_id ,product.product_name, product.product_image , product.price , category.category_name , size.size , size.quantity from (( product INNER JOIN category ON product.category_id = category.category_id) INNER JOIN size on product.product_id = size.product_id) `
+const getAllProduct = `SELECT product.product_id ,product.product_name, product.product_image , product.price , category.category_name , size.size , size.quantity from (( product INNER JOIN category ON product.category_id = category.category_id) INNER JOIN size on product.product_id = size.product_id) `;
 const getProductByProductIdSQL = 'select * from product where deleted_at is null and product_id=?';
 
 const addViewQuery = 'UPDATE product SET view = ? WHERE product.product_id = ?';
@@ -49,6 +51,7 @@ module.exports = {
   productDetailQuery,
   productsAllQuery,
   dealsFavorite,
+  getAllProduct,
   listCategoryQuery,
   hotDealsQuery,
   listSuggestions,

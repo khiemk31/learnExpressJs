@@ -11,8 +11,8 @@ module.exports = (router) => {
   router.put('/user/recoveryPass', user.recoveryPassword);
   router.put('/user/update', user.update);
   router.get('/user/getAllUser', user.getAllUser);
-  router.get('/user/detail',user.detail);
-  router.delete('/user/remove/:id',user.remove);
+  router.get('/user/detail', user.detail);
+  router.delete('/user/remove/:id', user.remove);
   //Category
   router.post('/category/add', category.add);
   router.get('/category/getAll', category.getAll);
@@ -22,4 +22,5 @@ module.exports = (router) => {
   router.post('/size/add', size.insertSize);
   //Product
   router.post('/product/add', product.add);
+  router.get('/product/getAll', product.getList);
 };
