@@ -46,6 +46,26 @@ const add = async (req, res) => {
   }
 };
 
+const getList = async (req, res) => {
+  try {
+    const category_id = req.params.id;
+    const { user_id } = req;
+    const { limit, offset } = req.query;
+    const connection = await getConnection(req);
+    const categoryProduct = await query(connection, productSQL.listCategoryQuery(limit), [category_id]);
+    const categoryAllProduct = await query(connection, listAllCategoryQuery(), [category_id]);
+    const favorites = await query(connection, dealsFavorite, [user_id]);
+    return res.status(200).json({
+      message: 'success',
+      data: customizeListProduct(categoryProduct),
+
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: `${e}` });
+  }
+};
+
 const remove = async (req, res) => {
   try {
     const {role} = req;
@@ -62,4 +82,4 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = {add};
+module.exports = {add , getList};

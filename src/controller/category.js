@@ -61,10 +61,10 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    const {id, role} = req.params;
-    // const {role} = req;
+    const {id} = req.params;
+    const {role} = req;
 
-    // if (role.parseInt !== 0) return res.status(403).json({message: 'Không có quyền xóa'});
+    if (role !== 'super admin') return res.status(403).json({message: 'Không có quyền xóa'});
     const connection = await getConnection(req);
     const category = await query(connection, categorySQL.categoryQueryByIdSQL, [id]);
     if (isEmpty(category)) {

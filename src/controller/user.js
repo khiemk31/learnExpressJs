@@ -5,7 +5,7 @@ const {isEmpty} = require('../utils/validate');
 const {uploadImage} = require('../utils/image');
 const UserSQL = require('../sql/userSQL');
 const req = require('express/lib/request');
-const moment= require('moment') ;
+const moment = require('moment');
 
 //API  registerUser
 const register = async (req, res) => {
@@ -58,14 +58,17 @@ const login = async (req, res) => {
   try {
     const {phone, password} = req.body;
     const connection = await getConnection(req);
-    const user = await query(connection, UserSQL.getUserQuerySQL, [phone]);
-
-    if (isEmpty(user)) {
-      return res.status(404).json({message: 'Số điện thoại chưa được đăng ký'});
+    const userBlock = await query(connection, UserSQL.getUserBlockQuerySQL, [phone]);
+    if (isEmpty(userBlock)) {
+      const user = await query(connection, UserSQL.getUserQuerySQL, [phone]);
+      if (isEmpty(user)) {
+        return res.status(404).json({message: 'Số điện thoại chưa được đăng ký'});
+      } else {
+        await comparePassword(user[0], password);
+        return res.status(200).json({message: 'Đăng nhập thành công', data: user[0].user_id});
+      }
     } else {
-      user_id1 = user[0].user_id;
-      await comparePassword(user[0], password);
-      return res.status(200).json({message: 'Đăng nhập thành công', data: user_id1});
+      return res.status(999).json({message: 'UserBlock CMNR'});
     }
   } catch (e) {
     return res.status(500).json({message: `${e}`});
@@ -76,17 +79,22 @@ const loginAdmin = async (req, res) => {
   try {
     const {phone, password} = req.body;
     const connection = await getConnection(req);
-    const admin = await query(connection, UserSQL.getUserAdminQuerySQL, [phone]);
-    const superAdmin = await query(connection, UserSQL.getUserSupperAdminQuerySQL, [phone]);
-    if (isEmpty(phone) || isEmpty(password)) return res.status(500).json({message: 'Vui lòng nhập dữ liệu hợp lệ'});
-    if (isEmpty(admin) && isEmpty(superAdmin)) {
-      return res.status(404).json({message: 'Số điện thoại chưa được đăng ký Admin'});
-    } else if (isEmpty(superAdmin)) {
-      await comparePassword(admin[0], password);
-      return res.status(200).json({message: 'Đăng nhập thành công', data: admin[0]});
+    const userBlock = await query(connection, UserSQL.getUserBlockQuerySQL, [phone]);
+    if (isEmpty(userBlock)) {
+      const admin = await query(connection, UserSQL.getUserAdminQuerySQL, [phone]);
+      const superAdmin = await query(connection, UserSQL.getUserSupperAdminQuerySQL, [phone]);
+      if (isEmpty(phone) || isEmpty(password)) return res.status(500).json({message: 'Vui lòng nhập dữ liệu hợp lệ'});
+      if (isEmpty(admin) && isEmpty(superAdmin)) {
+        return res.status(404).json({message: 'Số điện thoại chưa được đăng ký Admin'});
+      } else if (isEmpty(superAdmin)) {
+        await comparePassword(admin[0], password);
+        return res.status(200).json({message: 'Đăng nhập thành công', data: admin[0]});
+      } else {
+        await comparePassword(superAdmin[0], password);
+        return res.status(200).json({message: 'Đăng nhập thành công', data: superAdmin[0]});
+      }
     } else {
-      await comparePassword(superAdmin[0], password);
-      return res.status(200).json({message: 'Đăng nhập thành công', data: superAdmin[0]});
+      return res.status(999).json({message: 'UserBlock Cút cmm đi'});
     }
   } catch (e) {
     return res.status(500).json({message: `${e}`});
@@ -180,5 +188,20 @@ const detail = async (req, res) => {
     return res.status(500).json({message: `${e}`});
   }
 };
+// API delete
+const remove = async (req, res) => {
+  try {
+    const {role} = req;
+    const user_id = req.params.id;
+    console.log(role);
+    if (role !== 'super admin') return res.status(403).json({message: 'Không có quyền xóa'});
+    const connection = await getConnection(req);
+    const removeUser = `update user set deleted_at =? , active=? where user_id=?`;
+    await query(connection, removeUser, [new Date(), 1, user_id]);
+    return res.status(200).json({message: 'success'});
+  } catch (error) {
+    return res.status(500).json({message: `${e}`});
+  }
+};
 
-module.exports = {register, registerAdmin, login, loginAdmin, recoveryPassword, update, getAllUser, detail};
+module.exports = {register, registerAdmin, login, loginAdmin, recoveryPassword, update, getAllUser, detail, remove};

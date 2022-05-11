@@ -12,6 +12,7 @@ module.exports = (router) => {
   router.put('/user/update', user.update);
   router.get('/user/getAllUser', user.getAllUser);
   router.get('/user/detail',user.detail);
+  router.delete('/user/remove/:id',user.remove);
   //Category
   router.post('/category/add', category.add);
   router.get('/category/getAll', category.getAll);
