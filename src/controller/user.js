@@ -5,6 +5,7 @@ const {isEmpty} = require('../utils/validate');
 const {uploadImage} = require('../utils/image');
 const UserSQL = require('../sql/userSQL');
 const req = require('express/lib/request');
+const moment= require('moment') ;
 
 //API  registerUser
 const register = async (req, res) => {
@@ -151,11 +152,11 @@ const getAllUser = async (req, res) => {
     const getUsersSQL = 'SELECT * FROM `user`';
     const connection = await getConnection(req);
     const users = await query(connection, getUsersSQL);
-    // for (const user of users) {
-    //   if (user.date_of_birth) {
-    //     user.date_of_birth = moment(user.date_of_birth).format('DD-MM-YYYY');
-    //   }
-    // }
+    for (const user of users) {
+      if (user.date_of_birth) {
+        user.date_of_birth = moment(user.date_of_birth).format('DD-MM-YYYY');
+      }
+    }
     return res.status(200).json({message: 'success', data: users});
   } catch (e) {
     return res.status(500).json({message: `${e}`});
