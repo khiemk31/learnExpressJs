@@ -19,7 +19,7 @@ const register = async (req, res) => {
       phone,
       password: newPassword,
       user_name,
-      role: 2,
+      role: 'user',
       active: 0,
       created_at: new Date(),
     };
@@ -42,7 +42,7 @@ const registerAdmin = async (req, res) => {
       phone,
       password: newPassword,
       user_name,
-      role: 1,
+      role: 'admin',
       active: 0,
       created_at: new Date(),
     };
@@ -58,12 +58,13 @@ const login = async (req, res) => {
     const {phone, password} = req.body;
     const connection = await getConnection(req);
     const user = await query(connection, UserSQL.getUserQuerySQL, [phone]);
- 
+
     if (isEmpty(user)) {
       return res.status(404).json({message: 'Số điện thoại chưa được đăng ký'});
     } else {
+      user_id1 = user[0].user_id;
       await comparePassword(user[0], password);
-      return res.status(200).json({message: 'Đăng nhập thành công', data:user[0]});
+      return res.status(200).json({message: 'Đăng nhập thành công', data: user_id1});
     }
   } catch (e) {
     return res.status(500).json({message: `${e}`});
@@ -74,13 +75,17 @@ const loginAdmin = async (req, res) => {
   try {
     const {phone, password} = req.body;
     const connection = await getConnection(req);
-    const user = await query(connection, UserSQL.getUserAdminQuerySQL, [phone]);
+    const admin = await query(connection, UserSQL.getUserAdminQuerySQL, [phone]);
+    const superAdmin = await query(connection, UserSQL.getUserSupperAdminQuerySQL, [phone]);
     if (isEmpty(phone) || isEmpty(password)) return res.status(500).json({message: 'Vui lòng nhập dữ liệu hợp lệ'});
-    if (isEmpty(user)) {
-      return res.status(404).json({message: 'Số điện thoại chưa được đăng ký ADmin'});
+    if (isEmpty(admin) && isEmpty(superAdmin)) {
+      return res.status(404).json({message: 'Số điện thoại chưa được đăng ký Admin'});
+    } else if (isEmpty(superAdmin)) {
+      await comparePassword(admin[0], password);
+      return res.status(200).json({message: 'Đăng nhập thành công', data: admin[0]});
     } else {
-      await comparePassword(user[0], password);
-      return res.status(200).json({message: 'Đăng nhập thành công',data:user[0]});
+      await comparePassword(superAdmin[0], password);
+      return res.status(200).json({message: 'Đăng nhập thành công', data: superAdmin[0]});
     }
   } catch (e) {
     return res.status(500).json({message: `${e}`});
@@ -119,9 +124,6 @@ const update = async (req, res) => {
     if (avatar && avatar.includes('data:image/png;base64,')) {
       newAvatar = await uploadImage(avatar);
     }
-    // if (!isEmpty(password)) {
-    //   password = await encodePassword(password);
-    // }
     const connection = await getConnection(req);
     const user = await query(connection, `select * from user where user_id = '${user_id}'`);
     if (isEmpty(user)) return res.status(404).json({message: 'User not found'});
@@ -143,4 +145,39 @@ const update = async (req, res) => {
     return res.status(500).json({message: `${error}`});
   }
 };
-module.exports = {register, registerAdmin, login, loginAdmin, recoveryPassword, update};
+// api get all user
+const getAllUser = async (req, res) => {
+  try {
+    const getUsersSQL = 'SELECT * FROM `user`';
+    const connection = await getConnection(req);
+    const users = await query(connection, getUsersSQL);
+    // for (const user of users) {
+    //   if (user.date_of_birth) {
+    //     user.date_of_birth = moment(user.date_of_birth).format('DD-MM-YYYY');
+    //   }
+    // }
+    return res.status(200).json({message: 'success', data: users});
+  } catch (e) {
+    return res.status(500).json({message: `${e}`});
+  }
+};
+// API get Detail
+const detail = async (req, res) => {
+  try {
+    const {user_id} = req.body;
+    const connection = await getConnection(req);
+    const detailUserQuery = 'select *  from user where deleted_at is null and user_id=?';
+    const user = await query(connection, detailUserQuery, [user_id]);
+    if (isEmpty(user)) {
+      return res.status(404).json({message: 'User not found'});
+    }
+    if (user[0].date_of_birth) {
+      user[0].date_of_birth = moment(user[0].date_of_birth).format('DD-MM-YYYY');
+    }
+    return res.status(200).json({message: 'success', data: user[0]});
+  } catch (e) {
+    return res.status(500).json({message: `${e}`});
+  }
+};
+
+module.exports = {register, registerAdmin, login, loginAdmin, recoveryPassword, update, getAllUser, detail};

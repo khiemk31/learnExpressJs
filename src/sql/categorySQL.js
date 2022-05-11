@@ -5,4 +5,5 @@ module.exports = {
   updateCategorySQL: 'update category set ? where category_id=?',
   listCategoryQuerySQL: 'select * from category where deleted_at is null order by category_name desc',
   deleteCategorySQL: 'update category set deleted_at=? where category_id=?',
+
 };

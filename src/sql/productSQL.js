@@ -38,7 +38,7 @@ const getProductByProductIdSQL = 'select * from product where deleted_at is null
 
 const addViewQuery = 'UPDATE product SET view = ? WHERE product.product_id = ?';
 
-export {
+module.exports = {
   categoryQuery,
   productQuery,
   insertProductQuery,
