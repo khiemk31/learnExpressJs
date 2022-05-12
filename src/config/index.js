@@ -18,7 +18,7 @@ cloudinary.config({
 
 const accountSid = 'AC6831336a69e413ddda030af558579bc2';
 const messagingServiceSid = 'MG059e5c8e3ed10244b8ad968aabf85591';
-const authToken = 'd7495bceaa780e522fada3499cf3ec41';
+const authToken = '8a99bcc221ee09ee130a519c7996f296';
 
 const private_key = 'admin';
 //tk twilo
