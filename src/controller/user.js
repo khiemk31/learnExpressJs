@@ -3,9 +3,13 @@ const {encodePassword, comparePassword} = require('../utils/password');
 const {getConnection, query} = require('../utils/database');
 const {isEmpty} = require('../utils/validate');
 const {uploadImage} = require('../utils/image');
+const {decodeOTP, encodeOTP, generateOTP, sendOTP} = require('../utils/otp');
 const UserSQL = require('../sql/userSQL');
-const req = require('express/lib/request');
 const moment = require('moment');
+
+const twilio = require('twilio');
+const { accountSid, authToken } = require('../config');
+const client = twilio(accountSid, authToken);
 
 //API  registerUser
 const register = async (req, res) => {
@@ -204,4 +208,32 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = {register, registerAdmin, login, loginAdmin, recoveryPassword, update, getAllUser, detail, remove};
+const sendOTPAPI = async (req, res) => {
+  const {phone} = req.body;
+  const OTP = generateOTP();
+  await sendOTP(client, OTP, phone);
+  const otp_token = encodeOTP(OTP, new Date());
+  return res.json({message: 'success', otp_token});
+};
+
+const verifyOTP = async (req,res) => {
+  const { otp_token, otp } = req.body;
+  const data = await decodeOTP(otp_token);
+  if (new Date() > data.expire) return res.status(500).json({ message: 'OTP has expired' });
+  if (otp != data.otp) return res.status(409).json({ message: 'OTP not match' });
+  return res.status(200).json({ message: 'success' });
+}
+
+module.exports = {
+  register,
+  registerAdmin,
+  login,
+  loginAdmin,
+  recoveryPassword,
+  update,
+  getAllUser,
+  detail,
+  remove,
+  sendOTPAPI,
+  verifyOTP
+};

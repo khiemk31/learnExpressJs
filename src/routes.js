@@ -13,6 +13,8 @@ module.exports = (router) => {
   router.get('/user/getAllUser', user.getAllUser);
   router.get('/user/detail', user.detail);
   router.delete('/user/remove/:id', user.remove);
+  router.post('/user/send-otp', user.sendOTPAPI);
+  router.post('/user/verify-otp', user.verifyOTP);
   //Category
   router.post('/category/add', category.add);
   router.get('/category/getAll', category.getAll);

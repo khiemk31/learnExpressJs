@@ -36,7 +36,7 @@ const getAll = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const { id } = req.params;
+    const {id} = req.params;
     const data = req.body;
     console.log('123321', id);
     const categoryQuery = 'select * from category where category_id=? and deleted_at is null';
@@ -61,9 +61,8 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    const {id} = req.params;
     const {role} = req;
-
+    const {id} = req.params;
     if (role !== 'super admin') return res.status(403).json({message: 'Không có quyền xóa'});
     const connection = await getConnection(req);
     const category = await query(connection, categorySQL.categoryQueryByIdSQL, [id]);

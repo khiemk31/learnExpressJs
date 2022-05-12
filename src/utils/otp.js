@@ -10,6 +10,7 @@ function generateOTP() {
 }
 
 function sendOTP(client, otp, phone) {
+  console.log(typeof client.messages.create)
   return new Promise((resolve) => {
     if (!phone.includes('+84')) {
       phone = '+84' + phone.slice(1);
@@ -25,9 +26,7 @@ function sendOTP(client, otp, phone) {
   });
 }
 
-const encodeOTP = (otp, expire, user_id) => {
-  return jwt.sign({user_id, otp, expire: expire.setSeconds(expire.getSeconds() + 120)}, private_key);
-};
+const encodeOTP = (otp, expire) => jwt.sign({otp, expire: expire.setSeconds(expire.getSeconds() + 120)}, private_key);
 
 const decodeOTP = (token) => {
   return new Promise((resolve, reject) =>
