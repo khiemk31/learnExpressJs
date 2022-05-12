@@ -35,7 +35,14 @@ const getAllProductsBySearchSQL = (search) =>
   `select * from product where deleted_at is null and product_name like '${search}%'`;
 const getProductsBySearchSQL = (search, limit, offset) =>
   `select * from product where deleted_at is null and product_name like '${search}%' order by product_id asc limit ${limit} offset ${offset}`;
+
+  //Khiem
 const getAllProduct = `SELECT product.product_id ,product.product_name, product.product_image , product.price , category.category_name , size.size , size.quantity from (( product INNER JOIN category ON product.category_id = category.category_id) INNER JOIN size on product.product_id = size.product_id) `;
+const getProductByCategory = `SELECT product.product_id ,product.product_name, product.product_image , product.price , size.size , size.quantity from 
+(( product INNER JOIN category ON product.category_id = category.category_id)
+ INNER JOIN size on product.product_id = size.product_id)
+ WHERE category.category_id = ?  `;
+
 const getProductByProductIdSQL = 'select * from product where deleted_at is null and product_id=?';
 
 const addViewQuery = 'UPDATE product SET view = ? WHERE product.product_id = ?';

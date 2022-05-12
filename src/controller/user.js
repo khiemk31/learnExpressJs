@@ -197,7 +197,6 @@ const remove = async (req, res) => {
   try {
     const {role} = req;
     const user_id = req.params.id;
-    console.log(role);
     if (role !== 'super admin') return res.status(403).json({message: 'Không có quyền xóa'});
     const connection = await getConnection(req);
     const removeUser = `update user set deleted_at =? , active=? where user_id=?`;

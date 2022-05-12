@@ -25,4 +25,6 @@ module.exports = (router) => {
   //Product
   router.post('/product/add', product.add);
   router.get('/product/getAll', product.getList);
+  router.get('/product/getProductByCategory', product.getProductByCategory);
+  router.delete('/product/remove/:id', product.remove);
 };
