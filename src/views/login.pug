@@ -1,0 +1,29 @@
+html
+  head
+    title Login
+    meta(charset='UTF-8')
+    meta(http-equiv='X-UA-Compatible' content='IE=edge')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    script(src="https://kit.fontawesome.com/a81368914c.js") 
+    style 
+        include css/login.css
+  body
+    .container
+      .img
+        img(src="img/logo.png")
+      .login-container
+        form(action='/routes/user/loginAdmin' method="POST")
+          img.avator(src='img/a.svg')
+          h1 Welcome administrator !
+          .input-div(one='')
+            .i
+              i.fas.fa-user
+            div
+              input.input(type='text' placeholder="Phone" name="phone")
+          .input-div(two='')
+            .i
+              i.fas.fa-lock
+            div
+              input.input(type='password' placeholder="Password" name="password")
+          a(href='#') Forgot password ?
+          input.btn(type='submit', value='Login')

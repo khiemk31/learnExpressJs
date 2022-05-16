@@ -13,12 +13,13 @@ const connection = myConnection(mysql, mysqlConfig, 'single');
 
 routes(router);
 
-// app.set('views', __dirname+"/views"); // Thư mục views nằm cùng cấp với file app.js
-// app.set('view engine', 'pug'); // Sử dụng pug làm view engine
+app.set('views', __dirname+"/views"); // Thư mục views nằm cùng cấp với file app.js
+app.set('view engine', 'pug'); // Sử dụng pug làm view engine
 
-// app.get('/home', function(req, res){
-// 	res.render('main');
-// })
+app.get('/', function(req, res){
+	res.render('login');
+})
+app.use('/routes',routes)
 
 
 
