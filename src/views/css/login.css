@@ -9,6 +9,7 @@
   }
   
   .container {
+    background-image: linear-gradient(to top left, #ffffff67,#ffffff67, #0015f7);
     width: 100vw;
     height: 100vh;
     display: grid;
@@ -136,23 +137,25 @@
     display: block;
     text-align: center;
     text-decoration: none;
-    color: #999;
-    font-size: 0.9rem;
+    color: rgba(85, 85, 85, 0.699);
+    font-size: 1rem;
     transition: 0.3s;
+    font-weight: 500;
   }
   a:hover {
     color: #5557ec;
   }
   .btn {
+    font-weight: 700;
     display: block;
     width: 100%;
     height: 50px;
     border-radius: 25px;
     margin: 20px 0;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     outline: none;
     border: none;
-    background-image: linear-gradient(to right, #8e97fd67, #4353ff);
+    background-image: linear-gradient(to left, #8e97fd67, #4353ff);
     cursor: pointer;
     color: #fff;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
