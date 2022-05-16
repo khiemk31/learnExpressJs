@@ -225,12 +225,16 @@ const verifyOTP = async (req,res) => {
   if (otp != data.otp) return res.status(409).json({ message: 'OTP not match' });
   return res.status(200).json({ message: 'success' });
 }
+const   getLoginAdmin = async (req,res) => {
+  res.render('login')
+}
 
 module.exports = {
   register,
   registerAdmin,
   login,
   loginAdmin,
+  getLoginAdmin,
   recoveryPassword,
   update,
   getAllUser,

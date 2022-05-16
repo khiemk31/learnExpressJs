@@ -84,8 +84,8 @@ const remove = async (req, res) => {
   try {
     const {role} = req.body;
     const product_id = req.params.id;
-    console.log(role)
-    if (role !== 'admin' && role !== 'supper admin') return res.status(403).json({message: 'You don’t have permission to access'});
+    if (role !== 'admin' && role !== 'supper admin')
+      return res.status(403).json({message: 'You don’t have permission to access'});
     const connection = await getConnection(req);
     const product = await query(connection, productSQL.productIDQuery, [product_id]);
     if (isEmpty(product)) return res.status(404).json({message: 'Product not found'});
@@ -96,4 +96,4 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = {add, getList,getProductByCategory,remove};
+module.exports = {add, getList, getProductByCategory, remove};
