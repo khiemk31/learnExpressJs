@@ -80,32 +80,32 @@ const login = async (req, res) => {
 };
 //API loginAdmin
 const loginAdmin = async (req, res) => {
-  var phone=req.body.phone
-  var password=req.body.password
-  console.log( phone + " "+ password)
-  // try {
-  //   const {phone, password} = req.body;
-  //   const connection = await getConnection(req);
-  //   const userBlock = await query(connection, UserSQL.getUserBlockQuerySQL, [phone]);
-  //   if (isEmpty(userBlock)) {
-  //     const admin = await query(connection, UserSQL.getUserAdminQuerySQL, [phone]);
-  //     const superAdmin = await query(connection, UserSQL.getUserSupperAdminQuerySQL, [phone]);
-  //     if (isEmpty(phone) || isEmpty(password)) return res.status(500).json({message: 'Vui lòng nhập dữ liệu hợp lệ'});
-  //     if (isEmpty(admin) && isEmpty(superAdmin)) {
-  //       return res.status(404).json({message: 'Số điện thoại chưa được đăng ký Admin'});
-  //     } else if (isEmpty(superAdmin)) {
-  //       await comparePassword(admin[0], password);
-  //       return res.status(200).json({message: 'Đăng nhập thành công', data: admin[0]});
-  //     } else {
-  //       await comparePassword(superAdmin[0], password);
-  //       return res.status(200).json({message: 'Đăng nhập thành công', data: superAdmin[0]});
-  //     }
-  //   } else {
-  //     return res.status(999).json({message: 'UserBlock Cút cmm đi'});
-  //   }
-  // } catch (e) {
-  //   return res.status(500).json({message: `${e}`});
-  // }
+  try {
+    const {phone, password} = req.body;
+    const connection = await getConnection(req);
+    const userBlock = await query(connection, UserSQL.getUserBlockQuerySQL, [phone]);
+    if (isEmpty(userBlock)) {
+      const admin = await query(connection, UserSQL.getUserAdminQuerySQL, [phone]);
+      const superAdmin = await query(connection, UserSQL.getUserSupperAdminQuerySQL, [phone]);
+      if (isEmpty(phone) || isEmpty(password)) return res.status(500).json({message: 'Vui lòng nhập dữ liệu hợp lệ'});
+      if (isEmpty(admin) && isEmpty(superAdmin)) {
+        return res.status(404).json({message: 'Số điện thoại chưa được đăng ký Admin'});
+      } else if (isEmpty(superAdmin)) {
+        await comparePassword(admin[0], password);
+        //check render
+        return res.status(200).render('aaa').json({message: 'Đăng nhập thành công', data: admin[0]});
+
+      } else {
+        await comparePassword(superAdmin[0], password);
+                //check render
+        return res.status(200).render('aaa').json({message: 'Đăng nhập thành công', data: superAdmin[0]});
+      }
+    } else {
+      return res.status(999).json({message: 'UserBlock Cút cmm đi'});
+    }
+  } catch (e) {
+    return res.status(500).json({message: `${e}`});
+  }
 };
 //API recovery password
 const recoveryPassword = async (req, res) => {
@@ -225,16 +225,12 @@ const verifyOTP = async (req,res) => {
   if (otp != data.otp) return res.status(409).json({ message: 'OTP not match' });
   return res.status(200).json({ message: 'success' });
 }
-const   getLoginAdmin = async (req,res) => {
-  res.render('login')
-}
 
 module.exports = {
   register,
   registerAdmin,
   login,
   loginAdmin,
-  getLoginAdmin,
   recoveryPassword,
   update,
   getAllUser,

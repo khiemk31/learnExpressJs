@@ -9,7 +9,7 @@
   }
   
   .container {
-    background-image: linear-gradient(to top left, #ffffff67,#ffffff67, #0015f7);
+    background-image: linear-gradient(to top left, #ffffff67,#0015f711, #0015f7);
     width: 100vw;
     height: 100vh;
     display: grid;
@@ -155,7 +155,7 @@
     font-size: 1.5rem;
     outline: none;
     border: none;
-    background-image: linear-gradient(to left, #8e97fd67, #4353ff);
+    background-image: linear-gradient(to left, #8e97fd00, #4353ff);
     cursor: pointer;
     color: #fff;
     font-family: Verdana, Geneva, Tahoma, sans-serif;

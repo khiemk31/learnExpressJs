@@ -7,8 +7,6 @@ module.exports = (router) => {
   router.post('/user/register', user.register);
   router.post('/user/registerAdmin', user.registerAdmin);
   router.post('/user/login', user.login);
-// trong router khai ra 1 API để get ra giao diện ( get LoginAdmin) đúng rồi get ra giao diện 
-  router.get('/user/loginAdmin',user.getLoginAdmin);
 
   router.post('/user/loginAdmin', user.loginAdmin);
   router.put('/user/recoveryPass', user.recoveryPassword);

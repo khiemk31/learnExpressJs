@@ -8,11 +8,11 @@ html
     style 
         include css/login.css
   body
-    .container
+    .container(enctype="multipart/form-data")
       .img
         img(src="img/logo.png")
       .login-container
-        form(action='' method="POST")
+        form(action='/user/loginAdmin' enctype="multipart/form-data" method="POST")
           img.avator(src='img/a.svg')
           h1 Welcome administrator !
           .input-div(one='')

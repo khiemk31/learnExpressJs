@@ -19,8 +19,10 @@ app.set('view engine', 'pug'); // Sử dụng pug làm view engine
 app.get('/', function(req, res){
 	res.render('login');
 })
-app.use('/routes',routes)
 
+app.get("/demo", function(req,res){
+	res.render('insertProducy');
+})
 
 
 // router.get('/',function(req,res){
@@ -28,7 +30,7 @@ app.use('/routes',routes)
 //    //__dirname : It will resolve to your project folder.
 //  });
 app.use(morgan('dev'));
-app.use(connection);
+app.use(connection); 
 app.use(express.json({extended: true, limit: '5mb'}));
 app.use(express.urlencoded({extended: true, limit: '5mb'}));
 app.use(router);
