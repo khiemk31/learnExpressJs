@@ -1,0 +1,86 @@
+extends ../views/header
+
+block content 
+    title User
+    script(src='https://cdn.tailwindcss.com')
+    .app-container.app-theme-white.body-tabs-shadow.fixed-sidebar.fixed-header
+        // header
+        .app-header.header-shadow
+            // logo
+            .app-header__logo
+                .logo-src(style="color: #000;width: 100% ; font-size: 25px; margin-bottom:15px;") Model Fashion
+                .header__pane.ml-auto
+                div
+                    button.hamburger.close-sidebar-btn.hamburger--elastic(type='button' data-class='closed-sidebar')
+                        span.hamburger-box
+                            span.hamburger-inner
+            //profile me      
+            .dropdown.user-menu(style="margin-left:750px; float: right;")
+                button.dropdown-toggle.nav-link(href='#' data-toggle='dropdown')
+                    img.user-image(src='assets/img/user/user.png' alt='')
+                    span.d-none.d-lg-inline-block UserName
+                .dropdown-menu(aria-labelledby='dropdownMenuButton')
+                    a.dropdown-item(href='#') Thông tin cá nhân
+                    hr
+                    a.dropdown-item(href='/login') Đăng xuất
+
+        // body
+        .app-main
+            // menu left
+            .app-sidebar.sidebar-shadow
+                .scrollbar-sidebar
+                    .app-sidebar__inner(style="width: 180px;")
+                        ul.vertical-nav-menu
+                            li.app-sidebar__heading Menu
+                            li
+                                a(href='/main') Trang chủ
+                            li
+                                a(href='/user') Người dùng
+
+                            li
+                                a(href='/category') Thể loại
+                            li
+                                a(href='/product')  Sản phẩm
+                            li
+                                a(href='/bill')  Quản Lý Đơn Hàng
+
+            .app-main__outer
+                .content-wrapper
+                    .content
+                        .bg-white.border.rounded
+                            h1text-blue-400.font-semibold.mb-4(class='text-[40px] leading-[55px]')
+                                | Thông Tin User
+                                .row.no-gutters
+                                    .col-lg-4.col-xl-3
+                                        .profile-content-left.pt-5.pb-3.px-3.px-xl-5
+                                            .card.text-center.widget-profile.px-0.border-0
+                                                .card-img.mx-auto.rounded-circle
+                                                    img(src=user.avatar  alt='user image' style="padding:10px;")
+                                                .card-body
+                                                    p(style="color: #000;width: 100% ; font-size: 20px; margin-bottom:15px;")
+                                    .col-lg-8.col-xl-9
+                                        .profile-content-right.py-5
+                                            div
+                                                p.ml-2(class='text-[#4285F4] text-[15px]') User ID
+                                                input.text-base.rounded-md.px-3.py-2(class='text-[#333333]' type='text' value=user.user_id style="width:600px;" disabled)
+                                            div
+                                                p.ml-2(class='text-[#4285F4] text-[15px]') Tên
+                                                input.text-base.rounded-md.px-3.py-2(class='text-[#333333]' type='text' value=user.user_name style="width:600px;" disabled)
+                                            div
+                                                p.ml-2(class='text-[#4285F4] text-[15px]') Số điện thoại
+                                                input.text-base.rounded-md.px-3.py-2(class='text-[#333333]' type='text' value=user.phone style="width:600px;" disabled)
+                                            div
+                                                p.ml-2(class='text-[#4285F4] text-[15px]') Ngày sinh
+                                                input.text-base.rounded-md.px-3.py-2(class='text-[#333333]' type='text' value=date_of_birth style="width:600px;" disabled)
+                                            div
+                                                p.ml-2(class='text-[#4285F4] text-[15px]') Địa chỉ
+                                                input.text-base.rounded-md.px-3.py-2(class='text-[#333333]' type='text' value=user.address style="width:600px;" disabled)
+                                            div
+                                                p.ml-2(class='text-[#4285F4] text-[15px]') Giới tính
+                                                if(user.gender=="1")
+                                                    input.text-base.rounded-md.px-3.py-2(class='text-[#333333]' type='text' value="Nam" style="width:600px;" disabled)
+                                                else if(user.gender=="2")
+                                                    input.text-base.rounded-md.px-3.py-2(class='text-[#333333]' type='text' value="Nữ" style="width:600px;" disabled)
+                                            div
+                                                p.ml-2(class='text-[#4285F4] text-[15px]') Ngày tạo tài khoản
+                                                input.text-base.rounded-md.px-3.py-2(class='text-[#333333]' type='text' value=user.created_at style="width:600px;" disabled)

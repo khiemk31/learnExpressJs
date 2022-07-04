@@ -1,0 +1,33 @@
+extends ../views/header
+
+block content 
+  title LOGIN
+  .container.d-flex.flex-column.justify-content-between.vh-100(enctype="multipart/form-data")
+    .row.justify-content-center.mt-5
+      .col-xl-5.col-lg-6.col-md-10
+        .card
+          .card-header.bg-primary(style="background-image: linear-gradient(to left,#ffffff67,#0015f7);")
+            .app-brand
+              span.brand-name(style="font-size:20px; color: #fff;") hệ thống model fashion
+          .card-body.p-5
+            if errors 
+              each err in errors
+                .alert.alert-danger(style="margin-bottom: 50px")= err
+            else
+              h4.text-dark.mb-5 Chào mừng trở lại!
+            form(action='/login' method="POST")
+              .row
+                .form-group.col-md-12.mb-4
+                  input#phone.form-control.input-lg(type='text' placeholder="Số điện thoại" name="phone" value= values ? values.phone : '')
+                .form-group.col-md-12
+                  input#password.form-control.input-lg(type='password' placeholder="Mật khẩu" name="password" value= values ? values.password : '')
+                .col-md-12
+                  .d-flex.my-2.justify-content-between
+                    .d-inline-block.mr-3
+                    p
+                      a.text-blue(href='#') Quên mật khẩu?
+                input.btn.btn-lg.btn-primary.btn-block.mb-4(type='submit' value='ĐĂNG NHẬP' style="background-image: linear-gradient(to right,#ffffff67,#0015f7);")
+
+    .copyright.pl-0
+      p.text-center
+        | &copy; 2022 Dự án tốt nghiệp "Hệ thống bán quần áo online".

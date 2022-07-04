@@ -1,6 +1,6 @@
 const {v2: cloudinary} = require('cloudinary');
 
-const port = 3000;
+const port = 5000;
 
 const mysqlConfig = {
   host: 'remotemysql.com',
