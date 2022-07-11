@@ -1,6 +1,5 @@
 const {isEmpty} = require('../utils/validate');
 const {getConnection, query} = require('../utils/database');
-const {v4: uuid} = require('uuid');
 const {insertSizeSQL, updateSizeQuery, getSizeQuery, removeSizeQuery, selectSizeByIdQuery} = require('../sql/sizeSQL');
 
 const insertSize = async (req, res) => {
@@ -11,7 +10,6 @@ const insertSize = async (req, res) => {
     const checkSize = await query(connection, getSizeQuery, size);
     if (!isEmpty(checkSize)) return res.status(404).json({message: 'Size existed'});
     await query(connection, insertSizeSQL, {
-      size_id: uuid(),
       size,
       product_id,
       quantity,

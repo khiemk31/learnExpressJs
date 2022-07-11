@@ -1,7 +1,6 @@
 extends ../views/header
 
 block content 
-    script(src='https://cdn.tailwindcss.com')
     title CHI TIẾT SẢN PHẨM
 
     .app-container.app-theme-white.body-tabs-shadow.fixed-sidebar.fixed-header
@@ -29,26 +28,19 @@ block content
             //menu left
             .app-sidebar.sidebar-shadow
                 .scrollbar-sidebar
-                    .app-sidebar__inner(style="width: 180px;")
+                    .app-sidebar__inner
                         ul.vertical-nav-menu
                             li.app-sidebar__heading Menu
                             li
-                                a(href='/home' style="width:250px;  ")
-                                    |                                     Trang chủ
+                                a(href='/main')   Trang chủ
                             li
-                                a(href='/user' style="width:250px;  ")
-                                    |                                     Người dùng
-
+                                a(href='/user' )  Người dùng
                             li
-                                a(href='/category' style="width:250px;  ")
-                                    |                                     Thể loại
-
+                                a(href='/category' )  Thể loại
                             li
-                                a(href='/product' style="color:#28a745;font-size:18px;width:250px;  ")
-                                    |                                     Sản phẩm
+                                a(href='/product')   Sản phẩm
                             li
-                                a(href='/bill' style="width:250px;  ")
-                                    |                                     Quản Lý Đơn Hàng
+                                a(href='/bill')    Quản Lý Đơn Hàng
             //- // content
 
             .app-main__outer

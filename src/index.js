@@ -11,12 +11,14 @@ const app = express();
 const router = express.Router();
 const {mysqlConfig} = require('./config');
 const connection = myConnection(mysql, mysqlConfig, 'single');
+const cookieParser = require('cookie-parser');
+require('dotenv').config();
 
 routes(router);
 
 app.set('views', __dirname + '/views'); // Thư mục views nằm cùng cấp với file app.js
 app.set('view engine', 'pug'); // Sử dụng pug làm view engine
-
+app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(cors());
 app.use(connection);

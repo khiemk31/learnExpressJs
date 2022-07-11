@@ -3,7 +3,6 @@ const productSQL = require('../sql/productSQL');
 const sizeSQL = require('../sql/sizeSQL');
 const categorySQL = require('../sql/categorySQL');
 const {getConnection, query} = require('../utils/database');
-const {v4: uuid} = require('uuid');
 const {uploadImage} = require('../utils/image');
 const {render} = require('express/lib/response');
 const moment = require('moment');
@@ -18,7 +17,7 @@ const product = async (req, res) => {
   for (const product of listProduct) {
     product.price = formatMoney(product.price);
   }
-  res.render('product', {listProduct: listProduct});
+  res.render('product1', {listProduct: listProduct});
 };
 //delete
 const removeProduct = async (req, res) => {
@@ -40,7 +39,7 @@ const removeProduct = async (req, res) => {
 const insertProduct = async (req, res) => {
   const connection = await getConnection(req);
   const listCategory = await query(connection, categorySQL.listNameCategoryQuerySQL);
-  res.render('insertProduct', {listCategory: listCategory});
+  res.render('insert_product', {listCategory: listCategory});
 };
 //ADD Product
 const add = async (req, res) => {
@@ -73,9 +72,11 @@ const add = async (req, res) => {
     const category = await query(connection, categoryQueryID, [data.category_name]);
     const product = await query(connection, productSQL.productQuery, [product_name]);
     if (!isEmpty(product)) return res.status(409).json({message: 'Sản Phẩm Đã TỒn Tại'});
-    const newProductId = uuid();
+    const lengthListProduct = (await query(connection, productSQL.getLengthListProduct)).length;
+    console.log(lengthListProduct);
+    const id = 'SP' + (lengthListProduct + 1);
     await query(connection, productSQL.insertProductQuery, {
-      product_id: newProductId,
+      product_id: id,
       product_name,
       category_id: category[0].category_id,
       price: price,
@@ -91,8 +92,7 @@ const add = async (req, res) => {
     const listQuantity = [quantityS, quantityM, quantityL, quantityXL];
     for (const [index, size] of listSize.entries()) {
       await query(connection, sizeSQL.insertSizeSQL, {
-        size_id: uuid(),
-        product_id: newProductId,
+        product_id: id,
         size: size,
         quantity: listQuantity[index],
         created_at: new Date(),
@@ -116,7 +116,6 @@ const search = async (req, res) => {
 
 const listProductCreated = async (req, res) => {
   const connection = await getConnection(req);
-  const flitter = 'select *  from product where deleted_at is null order by created_at DESC ';
   const listProduct = await query(connection, productSQL.getNewProduct);
   res.render('product', {listProduct: listProduct});
 };

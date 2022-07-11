@@ -2,7 +2,6 @@ extends ../views/header
 
 block content 
   title Trang Chủ
-  script(src='https://cdn.tailwindcss.com')
   .app-container.app-theme-white.body-tabs-shadow.fixed-sidebar.fixed-header
     // header
     .app-header.header-shadow
@@ -23,6 +22,7 @@ block content
           a.dropdown-item(href='#') Thông tin cá nhân
           hr
           a.dropdown-item(href='/login') Đăng xuất
+
     // body
     .app-main
       // menu left
@@ -42,13 +42,12 @@ block content
               li
                 a(href='/bill')    Quản Lý Đơn Hàng
 
-                // content
+      // content
       .app-main__outer
         .app-main__inner
           // code here
           .pb-20
-
-            h1.text-blue-400.font-semibold.mb-4(class='text-[40px] leading-[55px]') Doanh Thu Từng Tháng
+            h1.text-blue-400.font-semibold.mb-4(class='text-[20px] leading-[40px]') Doanh Thu Từng Tháng
             .table.w-full.p-2
               table.w-full.border
                 thead
@@ -63,7 +62,7 @@ block content
                       td.border-r.p-2=  p=i.month 
                       td.border-r.p-2=  p=i.DoanhThu + " đ"
 
-            h1.text-blue-400.font-semibold.mb-4(class='text-[40px] leading-[55px]')  TOP 10 Khách Đặt Nhiều Đơn Nhất
+            h1.text-blue-400.font-semibold.mb-4(class='text-[20px] leading-[40px]')  TOP 10 Khách Đặt Nhiều Đơn Nhất
             .table.w-full.p-2
               table.w-full.border
                 thead
@@ -77,5 +76,33 @@ block content
                     tr.border-b.bg-gray-100.text-center.text-sm.text-gray-600
                       td.border-r.p-2= i.user_name
                       td.border-r.p-2= i.SoLuongDon
+            h1.text-blue-400.font-semibold.mb-4(class='text-[20px] leading-[40px]')  Thống Kê Trạng Thái Đơn
+            .table.w-full.p-2
+              table.w-full.border
+                thead
+                  tr.border-b.bg-gray-50
+                    th
+                      .flex.items-center.justify-center Trạng Thái
+                    th
+                      .flex.items-center.justify-center Số Lượng  
+                tbody
+                  tr.border-b.bg-gray-100.text-center.text-sm.text-gray-600
+                    td.border-r.p-2 Đã Giao
+                    td.border-r.p-2=countBillDone
+                  tr.border-b.bg-gray-100.text-center.text-sm.text-gray-600
+                    td.border-r.p-2 Đã Hủy
+                    td.border-r.p-2=countBillCanceled
+                  tr.border-b.bg-gray-100.text-center.text-sm.text-gray-600
+                    td.border-r.p-2 Đã Hoàn
+                    td.border-r.p-2=countBillReturnRequest
+                  tr.border-b.bg-gray-100.text-center.text-sm.text-gray-600
+                    td.border-r.p-2 Đang Chờ Xử Lý
+                    td.border-r.p-2=countBillWaiting
+                  tr.border-b.bg-gray-100.text-center.text-sm.text-gray-600
+                    td.border-r.p-2 Giao Hàng Thất Bại
+                    td.border-r.p-2=countBillFail
+
+
+
 
               script(src='http://maps.google.com/maps/api/js?sensor=true')

@@ -4,10 +4,11 @@ const size = require('./controller/size');
 const product = require('./controller/product');
 const bill = require('./controller/bill');
 const view = require('./controller/main');
+const middleware = require('../src/utils/middleware/authenToken.middleware');
 
 module.exports = (router) => {
   //Main Router
-  router.get('/main', view.main);
+  router.get('/main', middleware.requireAuth, view.main);
   //category API
   router.get('/category/', category.category);
   router.get('/category/remove/:id', category.removeCategory);
@@ -28,16 +29,16 @@ module.exports = (router) => {
   router.get('/product/getProductByPrice', product.getProductByPrice);
   router.get('/product/detail/:id', product.getProductDetail);
   //Product Web View
-  router.get('/updateProduct/:id', product.getUpdate);
-  router.post('/product/update', product.update);
-  router.post('/product/search', product.search);
-  router.get('/product/productDetail/:id', product.productDetail);
-  router.get('/product/listProductCreated', product.listProductCreated);
-  router.get('/product/listProductDeleted', product.listProductDeleted);
-  router.post('/product/addProduct', product.add);
-  router.get('/product/insertProduct', product.insertProduct);
-  router.get('/product', product.product);
-  router.get('/product/remove/:id', product.removeProduct);
+  router.get('/updateProduct/:id', middleware.requireAuth, product.getUpdate);
+  router.post('/product/update', middleware.requireAuth, product.update);
+  router.post('/product/search', middleware.requireAuth, product.search);
+  router.get('/product/productDetail/:id', middleware.requireAuth, product.productDetail);
+  router.get('/product/listProductCreated', middleware.requireAuth, product.listProductCreated);
+  router.get('/product/listProductDeleted', middleware.requireAuth, product.listProductDeleted);
+  router.post('/product/addProduct', middleware.requireAuth, product.add);
+  router.get('/product/insertProduct', middleware.requireAuth, product.insertProduct);
+  router.get('/product', middleware.requireAuth, product.product);
+  router.get('/product/remove/:id', middleware.requireAuth, product.removeProduct);
   //User API
   router.get('/user/getuser', user.getUser);
   router.get('/user/userDetail/:id', user.userDetail);
@@ -57,15 +58,14 @@ module.exports = (router) => {
   router.post('/user/send-otp', user.apiSendOTP);
   router.post('/user/verify-otp', user.verifyOTP);
   //User Web View
-  router.get('/getAllUser', user.getAllUserTest);
-  router.get('/login', user.login);
-  router.post('/adminLogin2', user.adminLogin2);
-  router.post('/login', user.validateLoginAdmin, user.loginAdmin);
-  router.get('/user', user.getAll);
-  router.get('/getUser', user.getAllUser);
-  router.get('/getAllAdmin', user.getAllAdmin);
-  router.get('/getSupperAdmin', user.getSupperAdmin);
-  router.get('/getUserBlock', user.getUserBlock);
+  router.get('/getAllUser', middleware.requireAuth, user.getAllUserTest);
+  router.get('/login', user.loginWeb);
+  router.post('/login', user.loginAdmin);
+  router.get('/user', middleware.requireAuth, user.getAll);
+  router.get('/getUser', middleware.requireAuth, user.getAllUser);
+  router.get('/getAllAdmin', middleware.requireAuth, user.getAllAdmin);
+  router.get('/getSupperAdmin', middleware.requireAuth, user.getSupperAdmin);
+  router.get('/getUserBlock', middleware.requireAuth, user.getUserBlock);
   //Size API
   router.post('/size/add', size.insertSize);
   //Bill API
@@ -76,18 +76,18 @@ module.exports = (router) => {
   router.put('/bill/feedback', bill.feedback);
   router.put('/bill/returnRequest', bill.returnRequest);
   //Bill Web View
-  router.get('/bill', bill.bill);
-  router.get('/bill/getBillDetailWeb/:id', bill.getBillDetailWeb);
-  router.get('/bill/getAll', bill.getAll);
-  router.get('/bill/getWaiting', bill.getWaiting);
-  router.get('/bill/getDelivering', bill.getDelivering);
-  router.get('/bill/getDelivered', bill.getDelivered);
-  router.get('/bill/getRequestCancellation', bill.getRequestCancellation);
-  router.get('/bill/getCancelled', bill.getCancelled);
-  router.get('/bill/getRefuse', bill.getRefuse);
-  router.get('/bill/billConfirm/:id', bill.billConfirm);
-  router.get('/bill/billDone/:id', bill.billDone);
-  router.get('/bill/billCancel/:id', bill.billCancel);
-  router.get('/bill/billCancelDone/:id', bill.billCancelDone);
-  router.get('/bill/refuseToCancelBill/:id', bill.refuseToCancelBill);
+  router.get('/bill', middleware.requireAuth, bill.bill);
+  router.get('/bill/getBillDetailWeb/:id', middleware.requireAuth, bill.getBillDetailWeb);
+  router.get('/bill/getAll', middleware.requireAuth, bill.getAll);
+  router.get('/bill/getWaiting', middleware.requireAuth, bill.getWaiting);
+  router.get('/bill/getDelivering', middleware.requireAuth, bill.getDelivering);
+  router.get('/bill/getDelivered', middleware.requireAuth, bill.getDelivered);
+  router.get('/bill/getRequestCancellation', middleware.requireAuth, bill.getRequestCancellation);
+  router.get('/bill/getCancelled', middleware.requireAuth, bill.getCancelled);
+  router.get('/bill/getRefuse', middleware.requireAuth, bill.getRefuse);
+  router.get('/bill/billConfirm/:id', middleware.requireAuth, bill.billConfirm);
+  router.get('/bill/billDone/:id', middleware.requireAuth, bill.billDone);
+  router.get('/bill/billCancel/:id', middleware.requireAuth, bill.billCancel);
+  router.get('/bill/billCancelDone/:id', middleware.requireAuth, bill.billCancelDone);
+  router.get('/bill/refuseToCancelBill/:id', middleware.requireAuth, bill.refuseToCancelBill);
 };

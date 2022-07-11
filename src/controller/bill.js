@@ -1,4 +1,3 @@
-const {v4: uuid} = require('uuid');
 const {getConnection, query} = require('../utils/database');
 const {isEmpty} = require('../utils/validate');
 const userSQL = require('../sql/userSQL');
@@ -19,7 +18,7 @@ const add = async (req, res) => {
     await query(connection, billSQL.insertBill, {
       bill_id: id,
       user_id: user_id,
-      status: 'Đang Chờ',
+      status: 'Chờ Xác Nhận',
       total_price: total_price,
       total_product: product_list.length,
       address: address,
@@ -32,7 +31,6 @@ const add = async (req, res) => {
     });
     for (const [index, product] of product_list.entries()) {
       await query(connection, billSQL.insertBillDetails, {
-        bill_detail_id: uuid(),
         bill_id: id,
         product_name: product,
         size: list_size[index],
@@ -153,7 +151,7 @@ const getAll = async (req, res) => {
 // Lọc các đơn đang chờ
 const getWaiting = async (req, res) => {
   const connection = await getConnection(req);
-  const queryBill = 'SELECT * FROM bill WHERE status="Đang Chờ" order by created_at DESC ';
+  const queryBill = 'SELECT * FROM bill WHERE status="Chờ Xác Nhận" order by created_at DESC ';
   const listBill = await query(connection, queryBill);
   for (const bill of listBill) {
     bill.created_at = moment(bill.created_at).format('DD-MM-YYYY');
@@ -175,7 +173,7 @@ const getDelivering = async (req, res) => {
 //Lọc đơn đã giao
 const getDelivered = async (req, res) => {
   const connection = await getConnection(req);
-  const queryBill = 'SELECT * FROM bill WHERE status="Đã Giao" order by created_at DESC ';
+  const queryBill = 'SELECT * FROM bill WHERE status="Hoàn Thành" order by created_at DESC ';
   const listBill = await query(connection, queryBill);
   for (const bill of listBill) {
     bill.created_at = moment(bill.created_at).format('DD-MM-YYYY');
@@ -186,7 +184,7 @@ const getDelivered = async (req, res) => {
 //Lọc đơn y/c hủy
 const getRequestCancellation = async (req, res) => {
   const connection = await getConnection(req);
-  const queryBill = 'SELECT * FROM bill WHERE status="Yêu Cầu Hủy" order by created_at DESC ';
+  const queryBill = 'SELECT * FROM bill WHERE status="Yêu Cầu Hủy Đơn" order by created_at DESC ';
   const listBill = await query(connection, queryBill);
   for (const bill of listBill) {
     bill.created_at = moment(bill.created_at).format('DD-MM-YYYY');
@@ -247,7 +245,7 @@ const billConfirm = async (req, res) => {
     return res.status(500).json({message: `${e}`});
   }
 };
-//Đã Giao
+//Hoàn Thành
 const billDone = async (req, res) => {
   try {
     const {id} = req.params;
@@ -268,7 +266,7 @@ const billDone = async (req, res) => {
       const newSizeQuantity = size[0].quantity - billDetail.quantity;
       await query(connection, updateSize, [newSizeQuantity, size.size_id]);
     }
-    await query(connection, billSQL.updateStatusBillWeb, ['Đã Giao', id]);
+    await query(connection, billSQL.updateStatusBillWeb, ['Hoàn Thành', id]);
     const listBill = await query(connection, billSQL.queryAllBill);
     for (const bill of listBill) {
       bill.created_at = moment(bill.created_at).format('DD-MM-YYYY');

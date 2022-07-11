@@ -23,13 +23,12 @@ block content
                     a.dropdown-item(href='#') Thông tin cá nhân
                     hr
                     a.dropdown-item(href='/login') Đăng xuất
-
         // body
         .app-main
             // menu left
             .app-sidebar.sidebar-shadow
                 .scrollbar-sidebar
-                    .app-sidebar__inner(style="width: 180px;")
+                    .app-sidebar__inner
                         ul.vertical-nav-menu
                             li.app-sidebar__heading Menu
                             li
@@ -43,29 +42,21 @@ block content
                                 a(href='/product')  Sản phẩm
                             li
                                 a(href='/bill')  Quản Lý Đơn Hàng
-            // content
             .app-main__outer
                 .app-main__inner
-                    // code here
                     .pb-20
-                        h1.text-blue-400.font-semibold.mb-4(class='text-[40px] leading-[55px]')
-                            | Quản lý thể loại
-
-                        form(action="/category/search" , method="POST" ) 
-                            .flex.items-center.justify-center.w-full(style="margin: 0px 20px;")
-                                .w-full.mx-auto.flex.items-center.rounded-lg.bg-white(x-data="{ search: '' }")
-                                    .w-full
-                                        input.w-full.rounded-full.px-4.py-1.text-gray-800(type='search' class='focus:outline-none' placeholder='Tìm thể loại . . .' x-model='search' name="category_name")
-                                    div
-                                        button.flex.h-12.w-12.items-center.justify-center.rounded-r-lg.bg-blue-500.text-white(type='submit', :class="(search.length > 0) ? 'bg-purple-500' : 'bg-gray-500 cursor-not-allowed'", :disabled='search.length == 0')
-                                            svg.h-5.w-5(fill='none' stroke='currentColor' viewbox='0 0 24 24' xmlns='http://www.w3.org/2000/svg')
-                                                path(stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z')
-                        a.bg-gradient-to-l.from-cyan-500.to-blue-500.text-white.rounded-md.drop-shadow-md.transition-all.duration-700(href="/insertCategory" style="text-decoration: none;margin-top: 25px;margin-bottom:25px; padding: 10px 10px 10px 10px;") 
+                        .col-lg-8.mx-auto.text-center
+                            h1.display-4  Thể Loại
+                        row.align-items-center
+                            nav.navbar.navbar
+                                form.form-inline(action="/category/search" , method="POST" ) 
+                                    input.form-control.mr-sm-2(type='search' aria-label='Search' class='focus:outline-none' placeholder='Tìm thể loại . . .' x-model='search' name="category_name")
+                                    button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search
+                        a.bg-gradient-to-l.from-cyan-500.to-blue-500.text-white.rounded-md.drop-shadow-md.transition-all.duration-700(href="/insertCategory" style="text-decoration: none;padding: 10px 10px 10px 10px;") 
                             button(type='submit') Thêm Thể Loại
-                        .table.w-full.p-2
+                        .table.p-6
                             .dropdown.d-inline-block.mb-1
-                                button#dropdownMenuButton.btn.btn-outline-info.dropdown-toggle(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' data-display='static')
-                                    | Bộ Lọc 
+                                button#dropdownMenuButton.btn.btn-outline-info.dropdown-toggle(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' data-display='static') Bộ Lọc 
                                 .dropdown-menu(aria-labelledby='dropdownMenuButton')
                                     a.dropdown-item(href='/category') Tất cả thể loại
                                     a.dropdown-item(href='/category/deleted') Đã Xóa

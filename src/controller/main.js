@@ -13,7 +13,26 @@ const main = async (req, res) => {
   GROUP BY user_id 
   ORDER BY COUNT(bill_id) DESC LIMIT 0,10`;
   const listTop10User = await query(connection, queryTop10User);
-  res.render('main', {ListDoanhThu: ListDoanhThu, listTop10User: listTop10User});
+  queryCountBillDone = `SELECT COUNT(bill_id) as bill_done FROM bill WHERE status="Đã Giao"`;
+  queryCountBillCanceled = `SELECT COUNT(bill_id) as countBillCanceled FROM bill WHERE status="Đã Hủy"`;
+  queryCountBillReturnRequest = `SELECT COUNT(bill_id) as countBillReturnRequest FROM bill WHERE status="Đã Hoàn"`;
+  queryCountBillWaiting = `SELECT COUNT(bill_id) as countBillWaiting FROM bill WHERE status="Đang Chờ" OR status="Đang Xử Lý" OR status="Đang Giao"`;
+  queryCountBillFail = `SELECT COUNT(bill_id) as countBillFail FROM bill WHERE status="Giao Thất Bại"`;
+  const countBillDone = await query(connection, queryCountBillDone);
+  const countBillCanceled = await query(connection, queryCountBillCanceled);
+  const countBillReturnRequest = await query(connection, queryCountBillReturnRequest);
+  const countBillWaiting = await query(connection, queryCountBillWaiting);
+  const countBillFail = await query(connection, queryCountBillFail);
+
+  res.render('main', {
+    ListDoanhThu: ListDoanhThu,
+    listTop10User: listTop10User,
+    countBillDone: countBillDone[0].bill_done,
+    countBillCanceled: countBillCanceled[0].countBillCanceled,
+    countBillReturnRequest: countBillReturnRequest[0].countBillReturnRequest,
+    countBillWaiting: countBillWaiting[0].countBillWaiting,
+    countBillFail: countBillFail[0].countBillFail,
+  });
 };
 
 module.exports = {

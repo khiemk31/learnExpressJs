@@ -1,8 +1,8 @@
 const {isEmpty} = require('../utils/validate');
-const {v4: uuid} = require('uuid');
 const {getConnection, query} = require('../utils/database');
 const categorySQL = require('../sql/categorySQL');
 const moment = require('moment');
+const {uploadImage} = require('../utils/image');
 //Web View
 //Category
 const getAddCategory = async (req, res) => {
@@ -11,15 +11,22 @@ const getAddCategory = async (req, res) => {
 const addCategory = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data.category_name);
+
+    if (req.files.category_image.data) {
+      var categoryImage = 'data:image/jpeg;base64,' + req.files.category_image.data.toString('base64');
+      const upload = await uploadImage(categoryImage);
+      categoryImage = upload.url;
+    }
+    console.log(categoryImage);
+
     const connection = await getConnection(req);
     const category = await query(connection, categorySQL.categoryQueryByNameSQL, [data.category_name]);
     if (!isEmpty(category)) {
       return res.status(404).json({message: 'Đã tồn tại '});
     } else {
       await query(connection, categorySQL.insertCategorySQL, {
-        category_id: uuid(),
         category_name: data.category_name,
+        category_image: categoryImage,
         created_at: new Date(),
       });
       const listCategory = await query(connection, categorySQL.queryListCategory);
@@ -156,6 +163,7 @@ const getUpdateCategory = async (req, res) => {
   const connection = await getConnection(req);
   const search = 'select *  from category where  category_id=?';
   const listCategory = await query(connection, search, [data.id]);
+  console.log(listCategory);
   res.render('update_category', {category: listCategory[0]});
 };
 //update thể loại

@@ -3,6 +3,7 @@ const productQuery = `select * from product where deleted_at is null and product
 const insertProductQuery = `insert into product set ?`;
 const productIDQuery = `select * from product where deleted_at is null and product_id=?`;
 const updateQuery = `UPDATE product SET deleted_at= ? WHERE product_id= ?`;
+const getLengthListProduct = `SELECT * FROM product`;
 const getAllProduct = `SELECT product.product_id ,product.product_name, product.product_image , product.price  from  product , category WHERE  product.category_id = category.category_id and  product.deleted_at is NULL and category.deleted_at is NULL`;
 const getNewProduct = `SELECT product.product_id ,product.product_name, product.product_image , product.price  from  product , category WHERE  product.category_id = category.category_id and  product.deleted_at is NULL and category.deleted_at is NULL  ORDER BY product.created_at DESC`;
 const getProductDeleted = `SELECT product.product_id ,product.product_name, product.product_image , product.price  from  product , category WHERE  product.category_id = category.category_id and  product.deleted_at is not NULL OR category.deleted_at is not NULL`;
@@ -12,6 +13,7 @@ const listSizeProductQuery = `select size , quantity from size where  product_id
 const queryProductByCategory = `SELECT product.product_id ,product.product_name, product.product_image , product.price  from  product , category WHERE  product.category_id = category.category_id and  product.deleted_at is NULL and category.deleted_at is NULL and category.category_id=?`;
 const querySearchProductByName = `SELECT product.product_id ,product.product_name, product.product_image , product.price  from  product , category WHERE  product.category_id = category.category_id and  product.deleted_at is NULL and category.deleted_at is NULL and product.product_name=?`;
 module.exports = {
+  getLengthListProduct,
   categoryQuery,
   productQuery,
   insertProductQuery,

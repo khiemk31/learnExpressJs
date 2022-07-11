@@ -1,3 +1,4 @@
+doctype html
 html
     head
         meta(charset='UTF-8')
@@ -7,68 +8,19 @@ html
         link(rel='preconnect' href='https://fonts.googleapis.com')
         link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin='')
         link(href='https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100;200;300;400;500;600&display=swap' rel='stylesheet')
-
+        //CSS
         style 
             include css/main.css
-        style 
-            include assets/plugins/toaster/toastr.min.css
-        style 
-            include assets/plugins/nprogress/nprogress.css
-        style 
-            include assets/plugins/flag-icons/css/flag-icon.min.css
-        style 
-            include assets/plugins/jvectormap/jquery-jvectormap-2.0.3.css
-        style 
-            include assets/plugins/ladda/ladda.min.css
-        style 
-            include assets/plugins/select2/css/select2.min.css
-        style 
-            include assets/plugins/daterangepicker/daterangepicker.css
-        style
-            link#sleek-css(rel='stylesheet' href='assets/css/sleek.css')
         // import js
         script 
             include js/main.js
-        script  
-            include assets/plugins/nprogress/nprogress.js
+        script 
+            include js/product.js
         script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDCn8TFXGg17HAUcNpkwtxxyT9Io9B_NcM' defer='')
-        script(src='assets/plugins/jquery/jquery.min.js')
-        script
-            include assets/plugins/bootstrap/js/bootstrap.bundle.min.js
-        script
-            include assets/plugins/toaster/toastr.min.js
-        script
-            include assets/plugins/slimscrollbar/jquery.slimscroll.min.js
-        script 
-            include  assets/plugins/charts/Chart.min.js
-        script 
-            include assets/plugins/ladda/spin.min.js
-        script 
-            include assets/plugins/ladda/ladda.min.js
-        script 
-            include assets/plugins/jquery-mask-input/jquery.mask.min.js
-        script 
-            include assets/plugins/select2/js/select2.min.js
-        script 
-            include assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.js
-        script 
-            include assets/plugins/jvectormap/jquery-jvectormap-world-mill.js
-        script 
-            include assets/plugins/daterangepicker/moment.min.js
-        script 
-            include assets/plugins/daterangepicker/daterangepicker.js
-        script
-            include assets/plugins/jekyll-search.min.js
-        script
-            include assets/js/sleek.js
-        script 
-            include assets/js/chart.js
-        script 
-            include assets/js/date-range.js
-        script 
-            include assets/js/map.js
-        script 
-            include assets/js/custom.js
+        script(src='https://cdn.tailwindcss.com')
+        link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css' integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm' crossorigin='anonymous')
+        script(src='https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js' integrity='sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl' crossorigin='anonymous')
+
     body 
         block content
 

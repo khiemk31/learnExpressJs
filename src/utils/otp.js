@@ -10,7 +10,7 @@ function generateOTP() {
 }
 
 function sendOTP(client, otp, phone) {
-  console.log(typeof client.messages.create)
+  console.log(typeof client.messages.create);
   return new Promise((resolve) => {
     if (!phone.includes('+84')) {
       phone = '+84' + phone.slice(1);

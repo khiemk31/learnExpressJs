@@ -41,63 +41,55 @@ block content
                                 a(href='/product')  Sản phẩm
                             li
                                 a(href='/bill')    Quản Lý Đơn Hàng
-            // content
             .app-main__outer
                 .app-main__inner
-                    // code here
                     .pb-20
-                        h1.text-blue-400.font-semibold.mb-14(class='text-[40px] leading-[55px]')
-                            |Thêm Sản Phẩm
+                        h1.text-blue-400.font-semibold.mb-14(class='text-[30px] leading-[40px]') Thêm Sản Phẩm
                         form(action='/product/addProduct' method='post' enctype='multipart/form-data')
-                            h2.text-blue-400.text-center.mb-6(class='text-[20px]')
-                                | Thông Tin Sản Phẩm
-                            // Thông tin
+                            h2.text-blue-400.text-center.mb-6(class='text-[20px]') Thông Tin Sản Phẩm
                             .flex.justify-between.mb-20
-                                .grid.grid-rows-6.gap-y-4.mb-6(class='w-[60%]')
+                                .grid.grid-rows-6.gap-y-4.mb-6(class='w-[80%]')
                                     div
-                                        p.ml-2(class='text-[#4285F4] text-[12px]') Tên sản phẩm
-                                        input.w-full.text-base.rounded-md.px-3.py-2(class='text-[#333333] border-[1px] border-[#333333]' type='text' name='product_name')
+                                        p.ml-2(class='text-[#4285F4] text-[15px]') Tên sản phẩm
+                                        input(class='text-[#333333] border-[1px] border-[#333333]' type='text' name='product_name')
                                     .media-body
-                                        div(style="width: 200px ; float: left;")
-                                            p.ml-2(class='text-[#4285F4] text-[12px]') Giá bán
+                                        div(style="width: 200px ; float: left; margin-right:25px")
+                                            p.ml-2(class='text-[#4285F4] text-[15px]') Giá bán
                                             input.w-full.text-base.rounded-md.px-3.py-2(class='text-[#333333] border-[1px] border-[#333333]' type='number' min='10000' name='price')
-                                        div(style="width: 200px ; float: left;")
-                                            p.ml-2(class='text-[#4285F4] text-[12px]' style='padding-left:40px;') Giá nhập
-                                            input.w-full.text-base.rounded-md.px-3.py-2(class='text-[#333333] border-[1px] border-[#333333]' type='number' style="width: 200px;margin-left: 40px;" min='10000' name='import_price')
-                                    div
-                                        p.ml-2(class='text-[#4285F4] text-[12px]') Th&#x1EC3; Thể Loại
-                                        select.bg-white.rounded-md(name="category_name" class='w-[100px] h-[40px]')
-                                            each i in  listCategory 
-                                                option( name="category_name")= i.category_name
-                                    .flex.items-center(class='mb-[34px]')
-                                        .w-10.mr-4
-                                            label
-                                            | S 
-                                        input#size_s.w-40.text-base.rounded-md.px-3.py-2(class='text-[#333333] border-[1px] border-[#333333]' type='number' min='0' max='1000' name='quantityS' placeholder='Số lượng')
-                                    .flex.items-center(class='mb-[34px]')
-                                        .w-10.mr-4
-                                            label
-                                            | M
-                                        input#size_m.w-40.text-base.rounded-md.px-3.py-2(class='text-[#333333] border-[1px] border-[#333333]' type='number' min='0' max='1000' name='quantityM' placeholder='Số lượng')
-                                    .flex.items-center(class='mb-[34px]')
-                                        .w-10.mr-4
-                                            label
-                                            | L
-                                        input#size_l.w-40.text-base.rounded-md.px-3.py-2(class='text-[#333333] border-[1px] border-[#333333]' type='number' min='0' max='1000' name='quantityL' placeholder='Số lượng')
-                                    .flex.items-center
-                                        .w-10.mr-4
-                                            label   
-                                            | XL
-                                        input#size_xl.w-40.text-base.rounded-md.px-3.py-2(class='text-[#333333] border-[1px] border-[#333333]' type='number' min='0' max='1000' name='quantityXL' placeholder='Số lượng')
+                                        div
+                                            p.ml-2(class='text-[#4285F4] text-[15px]') Thể Loại
+                                            select.bg-white.rounded-md(name="category_name" class='w-[100px] h-[40px]')
+                                                each i in  listCategory 
+                                                    option( name="category_name")= i.category_name
+                                    p.ml-2(class='text-[#4285F4] text-[15px]') SIZE
+                                    .media-body
+                                        div(style="width: 200px ; float: left; margin-right:25px")
+                                            .flex.items-center(class='mb-[34px]')
+                                                .w-10.mr-4 
+                                                    label S 
+                                                input#size_s.w-40.text-base.rounded-md.px-3.py-2(class='text-[#333333] border-[1px] border-[#333333]' type='number' min='0' max='1000' name='quantityS' placeholder='Số lượng')
+                                        div(style="width: 200px ; float: left; margin-right:25px")    
+                                            .flex.items-center(class='mb-[34px]')
+                                                .w-10.mr-4
+                                                    label M
+                                                input#size_m.w-40.text-base.rounded-md.px-3.py-2(class='text-[#333333] border-[1px] border-[#333333]' type='number' min='0' max='1000' name='quantityM' placeholder='Số lượng')
+                                        div(style="width: 200px ; float: left; margin-right:25px")    
+                                            .flex.items-center(class='mb-[34px]')
+                                                .w-10.mr-4
+                                                    label L
+                                                input#size_m.w-40.text-base.rounded-md.px-3.py-2(class='text-[#333333] border-[1px] border-[#333333]' type='number' min='0' max='1000' name='quantityL' placeholder='Số lượng')
+                                        div(style="width: 200px ; float: left; margin-right:25px")    
+                                            .flex.items-center(class='mb-[34px]')
+                                                .w-10.mr-4
+                                                    label  XL
+                                                input#size_m.w-40.text-base.rounded-md.px-3.py-2(class='text-[#333333] border-[1px] border-[#333333]' type='number' min='0' max='1000' name='quantityXL' placeholder='Số lượng')        
                             // Chọn ảnh
                             .mb-6
-                                h2.text-center.mb-10(class='text-[20px] text-[#E51B23]')
-                                    | Chọn Ảnh Sản Phẩm
+                                h2.text-center.mb-10(class='text-[20px] text-[#E51B23]') Chọn Ảnh Sản Phẩm
                                 .flex.justify-between.mb-6
                                     .flex
                                         input#fileToUpload1(type='file' name='product_image')
-                                h2.text-center.mb-10(class='text-[20px] text-[#E51B23]')
-                                    | Chọn Ảnh Nền 
+                                h2.text-center.mb-10(class='text-[20px] text-[#E51B23]') Chọn Ảnh Nền 
                                 .flex.justify-between.mb-6
                                     .flex
                                         input#fileToUpload2(type='file' name='image_1')

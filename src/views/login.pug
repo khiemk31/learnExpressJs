@@ -15,7 +15,7 @@ block content
                 .alert.alert-danger(style="margin-bottom: 50px")= err
             else
               h4.text-dark.mb-5 Chào mừng trở lại!
-            form(action='/login' method="POST")
+            form(action='/login' method="post")
               .row
                 .form-group.col-md-12.mb-4
                   input#phone.form-control.input-lg(type='text' placeholder="Số điện thoại" name="phone" value= values ? values.phone : '')
