@@ -3,11 +3,11 @@ const {v2: cloudinary} = require('cloudinary');
 const port = 5000;
 
 const mysqlConfig = {
-  host: 'remotemysql.com',
-  user: 'wlD1WQrpl6',
-  password: 'j3rtZ01oRj',
+  host: 'localhost',
+  user: 'modelfashion',
+  password: 'Bt8ELGhy68HTPytd',
   port: 3306,
-  database: 'wlD1WQrpl6',
+  database: 'modelfashion',
 };
 
 cloudinary.config({

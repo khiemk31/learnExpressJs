@@ -23,7 +23,7 @@ const product = async (req, res) => {
 const removeProduct = async (req, res) => {
   try {
     const {id} = req.params;
-    // if (role !== 'admin' && role !== 'supper admin')
+    // if (permission !== 'admin' && permission !== 'supper admin')
     //   return res.status(403).json({message: 'You don’t have permission to access'});
     const connection = await getConnection(req);
     const product = await query(connection, productSQL.productIDQuery, [id]);

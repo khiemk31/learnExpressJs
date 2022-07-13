@@ -87,9 +87,9 @@ const category = async (req, res) => {
 };
 //Xóa thể loại
 const removeCategory = async (req, res) => {
-  // const {role} = req;
+  // const {permission} = req;
   const {id} = req.params;
-  // if (role !== 'super admin') return res.status(403).json({message: 'Không có quyền xóa'});
+  // if (permission !== 'super admin') return res.status(403).json({message: 'Không có quyền xóa'});
   const connection = await getConnection(req);
   await query(connection, categorySQL.deleteCategorySQL, [new Date(), id]);
   const listCategory = await query(connection, categorySQL.listCategoryQuerySQL);

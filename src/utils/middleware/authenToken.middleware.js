@@ -8,10 +8,10 @@ module.exports.requireAuth = async (req, res, next) => {
     return;
   } else {
     const user_id = jwt.verify(req.cookies.token, process.env.ACCESS_TOKEN_SECRET).user_id;
-    const queryUser = `SELECT role FROM user where user_id =?`;
+    const queryUser = `SELECT permission FROM user where user_id =?`;
     const connection = await getConnection(req);
-    const role = await query(connection, queryUser, [user_id]);
-    if (role[0].role == 'super admin' || role[0].role == 'admin') {
+    const permission = await query(connection, queryUser, [user_id]);
+    if (permission[0].permission == 'super admin' || permission[0].permission == 'admin') {
       next();
     } else {
       res.render('login', {

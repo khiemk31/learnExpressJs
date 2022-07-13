@@ -28,16 +28,17 @@ const checkUser = async (req, res) => {
 //API  registerUser
 const register = async (req, res) => {
   try {
-    const {phone, password, user_name} = req.body;
+    const {user_id,phone, password, user_name} = req.body;
     const connection = await getConnection(req);
     const newPassword = await encodePassword(password);
     const newUser = {
+      user_id: user_id,
       phone,
       password: newPassword,
       user_name,
       gender: 1,
       date_of_birth: new Date(),
-      role: 'user',
+      permission	: 'user',
       active: 0,
       created_at: new Date(),
     };
@@ -70,7 +71,7 @@ const postInsertUser = async (req, res) => {
       user_name: data.user_name,
       gender: data.gender,
       address: data.address,
-      role: data.role,
+      permission	: data.permission	,
       avatar: avatar,
       active: 0,
       created_at: new Date(),
@@ -127,7 +128,7 @@ const recoveryPassword = async (req, res) => {
 const update = async (req, res) => {
   try {
     let {user_name, date_of_birth, avatar, gender, address} = req.body;
-    let {user_id} = req;
+    let {user_id} = req?.query;
     if (req?.query?.user_id) user_id = req.query.user_id;
     let newDateOfBirth = null;
     let newAvatar = null;
@@ -199,9 +200,9 @@ const searchUser = async (req, res) => {
 // API delete
 const blockUser = async (req, res) => {
   try {
-    // const {role} = req;
+    // const {permission	} = req;
     const user_id = req.params.id;
-    // if (role !== 'super admin') return res.status(403).json({message: 'Không có quyền xóa'});
+    // if (permission	 !== 'super admin') return res.status(403).json({message: 'Không có quyền xóa'});
     const connection = await getConnection(req);
     const removeUser = `update user set deleted_at =? , active=? where user_id=?`;
     await query(connection, removeUser, [new Date(), 1, user_id]);
@@ -218,9 +219,9 @@ const blockUser = async (req, res) => {
 };
 const activeUser = async (req, res) => {
   try {
-    // const {role} = req;
+    // const {permission	} = req;
     const user_id = req.params.id;
-    // if (role !== 'super admin') return res.status(403).json({message: 'Không có quyền xóa'});
+    // if (permission	 !== 'super admin') return res.status(403).json({message: 'Không có quyền xóa'});
     const connection = await getConnection(req);
     const activeUser = `update user set deleted_at =null, active=0 where user_id=?`;
     await query(connection, activeUser, [user_id]);

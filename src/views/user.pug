@@ -90,7 +90,7 @@ block content
                                                 td.border-r.p-2 Nam
                                             else  
                                                 td.border-r.p-2 Nữ
-                                            td.border-r.p-2= product.role
+                                            td.border-r.p-2= product.permission
                                             if (product.active===0)
                                                 td.border-r.p-2 active
                                             else  
@@ -102,7 +102,7 @@ block content
                                                         a(href='/user/userDetail/'+product.user_id method="GET")
                                                             li.dropdown-item
                                                                 | Xem chi tiết
-                                                        if (product.role=="admin" || product.role=="user")
+                                                        if (product.permission=="admin" || product.permission=="user")
                                                             if (product.active===0)
                                                                 a(href='/user/remove/'+product.user_id)
                                                                     li.dropdown-item
