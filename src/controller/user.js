@@ -57,6 +57,9 @@ const postInsertUser = async (req, res) => {
     const data = req.body;
     const connection = await getConnection(req);
     const user = await query(connection, UserSQL.getUserQuerySQL, [data.phone]);
+    const lengthListUser = (await query(connection, userSQL.getLengthListUser)).length;
+    console.log(lengthListUser);
+    const id = 'User' + (lengthListProduct + 1);
     if (!isEmpty(user)) return res.status(409).json({message: 'Số điện thoại đã được sử dụng !'});
     if (req.files.avatar.data) {
       var avatar = 'data:image/jpeg;base64,' + req.files.avatar.data.toString('base64');
@@ -65,7 +68,7 @@ const postInsertUser = async (req, res) => {
     }
     const newPassword = await encodePassword(data.password);
     const newUser = {
-      user_id: uuid(),
+      user_id: id,
       phone: data.phone,
       password: newPassword,
       user_name: data.user_name,

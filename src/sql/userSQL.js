@@ -15,4 +15,5 @@ module.exports = {
   queryListAdmin: `SELECT * FROM user WHERE deleted_at is null AND permission	='admin' OR permission	='super admin'`,
   getSupperAdmin: `SELECT * FROM user WHERE deleted_at is null AND  permission	='super admin'`,
   getAllUserBlock: `SELECT * FROM user WHERE deleted_at = 1`,
+  getLengthListUser : `SELECT * FROM user`,
 };
