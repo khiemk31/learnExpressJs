@@ -1,0 +1,418 @@
+extends ../views/demo
+block content 
+    title LOGIN
+        .main-panel
+            // Navbar
+            nav.navbar.navbar-expand-lg.navbar-absolute.fixed-top.navbar-transparent
+                .container-fluid
+                    .navbar-wrapper
+                        .navbar-toggle
+                            button.navbar-toggler(type='button')
+                                span.navbar-toggler-bar.bar1
+                                span.navbar-toggler-bar.bar2
+                                span.navbar-toggler-bar.bar3
+                        a.navbar-brand(href='javascript:;') Paper Dashboard 2
+                    button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navigation' aria-controls='navigation-index' aria-expanded='false' aria-label='Toggle navigation')
+                        span.navbar-toggler-bar.navbar-kebab
+                        span.navbar-toggler-bar.navbar-kebab
+                        span.navbar-toggler-bar.navbar-kebab
+                    #navigation.collapse.navbar-collapse.justify-content-end
+                        form
+                            .input-group.no-border
+                                input.form-control(type='text' value='' placeholder='Search...')
+                                .input-group-append
+                                    .input-group-text
+                                        i.nc-icon.nc-zoom-split
+                        ul.navbar-nav
+                            li.nav-item
+                                a.nav-link.btn-magnify(href='javascript:;')
+                                    i.nc-icon.nc-layout-11
+                                    p
+                                        span.d-lg-none.d-md-block Stats
+                            li.nav-item.btn-rotate.dropdown
+                                a#navbarDropdownMenuLink.nav-link.dropdown-toggle(href='http://example.com' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+                                    i.nc-icon.nc-bell-55
+                                    p
+                                        span.d-lg-none.d-md-block Some Actions
+                                .dropdown-menu.dropdown-menu-right(aria-labelledby='navbarDropdownMenuLink')
+                                    a.dropdown-item(href='#') Action
+                                    a.dropdown-item(href='#') Another action
+                                    a.dropdown-item(href='#') Something else here
+                            li.nav-item
+                                a.nav-link.btn-rotate(href='javascript:;')
+                                    i.nc-icon.nc-settings-gear-65
+                                    p
+                                        span.d-lg-none.d-md-block Account
+            // End Navbar
+            .content
+                .row
+                    .col-md-12
+                        .card.demo-icons
+                            .card-header
+                                h5.card-title 100 Awesome Nucleo Icons
+                                p.card-category
+                                    | Handcrafted by our friends from 
+                                    a(href='https://nucleoapp.com/?ref=1712' rel='nofollow') NucleoApp
+                            .card-body.all-icons
+                                #icons-wrapper
+                                    section
+                                        ul
+                                            li
+                                                i.nc-icon.nc-air-baloon
+                                                p nc-air-baloon
+                                            li
+                                                i.nc-icon.nc-album-2
+                                                p nc-album-2
+                                            li
+                                                i.nc-icon.nc-alert-circle-i
+                                                p nc-alert-circle-i
+                                            li
+                                                i.nc-icon.nc-align-center
+                                                p nc-align-center
+                                            li
+                                                i.nc-icon.nc-align-left-2
+                                                p nc-align-left-2
+                                            li
+                                                i.nc-icon.nc-ambulance
+                                                p nc-ambulance
+                                            li
+                                                i.nc-icon.nc-app
+                                                p nc-app
+                                            li
+                                                i.nc-icon.nc-atom
+                                                p nc-atom
+                                            li
+                                                i.nc-icon.nc-badge
+                                                p nc-badge
+                                            li
+                                                i.nc-icon.nc-bag-16
+                                                p nc-bag-16
+                                            li
+                                                i.nc-icon.nc-bank
+                                                p nc-bank
+                                            li
+                                                i.nc-icon.nc-basket
+                                                p nc-basket
+                                            li
+                                                i.nc-icon.nc-bell-55
+                                                p nc-bell-55
+                                            li
+                                                i.nc-icon.nc-bold
+                                                p nc-bold
+                                            li
+                                                i.nc-icon.nc-book-bookmark
+                                                p nc-book-bookmark
+                                            li
+                                                i.nc-icon.nc-bookmark-2
+                                                p nc-bookmark-2
+                                            li
+                                                i.nc-icon.nc-box-2
+                                                p nc-box-2
+                                            li
+                                                i.nc-icon.nc-box
+                                                p nc-box
+                                            li
+                                                i.nc-icon.nc-briefcase-24
+                                                p nc-briefcase-24
+                                            li
+                                                i.nc-icon.nc-bulb-63
+                                                p nc-bulb-63
+                                            li
+                                                i.nc-icon.nc-bullet-list-67
+                                                p nc-bullet-list-67
+                                            li
+                                                i.nc-icon.nc-bus-front-12
+                                                p nc-bus-front-12
+                                            li
+                                                i.nc-icon.nc-button-pause
+                                                p nc-button-pause
+                                            li
+                                                i.nc-icon.nc-button-play
+                                                p nc-button-play
+                                            li
+                                                i.nc-icon.nc-button-power
+                                                p nc-button-power
+                                            li
+                                                i.nc-icon.nc-calendar-60
+                                                p nc-calendar-60
+                                            li
+                                                i.nc-icon.nc-camera-compact
+                                                p nc-camera-compact
+                                            li
+                                                i.nc-icon.nc-caps-small
+                                                p nc-caps-small
+                                            li
+                                                i.nc-icon.nc-cart-simple
+                                                p nc-cart-simple
+                                            li
+                                                i.nc-icon.nc-chart-bar-32
+                                                p nc-chart-bar-32
+                                            li
+                                                i.nc-icon.nc-chart-pie-36
+                                                p nc-chart-pie-36
+                                            li
+                                                i.nc-icon.nc-chat-33
+                                                p nc-chat-33
+                                            li
+                                                i.nc-icon.nc-check-2
+                                                p nc-check-2
+                                            li
+                                                i.nc-icon.nc-circle-10
+                                                p nc-circle-10
+                                            li
+                                                i.nc-icon.nc-cloud-download-93
+                                                p nc-cloud-download-93
+                                            li
+                                                i.nc-icon.nc-cloud-upload-94
+                                                p nc-cloud-upload-94
+                                            li
+                                                i.nc-icon.nc-compass-05
+                                                p nc-compass-05
+                                            li
+                                                i.nc-icon.nc-controller-modern
+                                                p nc-controller-modern
+                                            li
+                                                i.nc-icon.nc-credit-card
+                                                p nc-credit-card
+                                            li
+                                                i.nc-icon.nc-delivery-fast
+                                                p nc-delivery-fast
+                                            li
+                                                i.nc-icon.nc-diamond
+                                                p nc-diamond
+                                            li
+                                                i.nc-icon.nc-email-85
+                                                p nc-email-85
+                                            li
+                                                i.nc-icon.nc-favourite-28
+                                                p nc-favourite-28
+                                            li
+                                                i.nc-icon.nc-glasses-2
+                                                p nc-glasses-2
+                                            li
+                                                i.nc-icon.nc-globe-2
+                                                p nc-globe-2
+                                            li
+                                                i.nc-icon.nc-globe
+                                                p nc-globe
+                                            li
+                                                i.nc-icon.nc-hat-3
+                                                p nc-hat-3
+                                            li
+                                                i.nc-icon.nc-headphones
+                                                p nc-headphones
+                                            li
+                                                i.nc-icon.nc-html5
+                                                p nc-html5
+                                            li
+                                                i.nc-icon.nc-image
+                                                p nc-image
+                                            li
+                                                i.nc-icon.nc-istanbul
+                                                p nc-istanbul
+                                            li
+                                                i.nc-icon.nc-key-25
+                                                p nc-key-25
+                                            li
+                                                i.nc-icon.nc-laptop
+                                                p nc-laptop
+                                            li
+                                                i.nc-icon.nc-layout-11
+                                                p nc-layout-11
+                                            li
+                                                i.nc-icon.nc-lock-circle-open
+                                                p nc-lock-circle-open
+                                            li
+                                                i.nc-icon.nc-map-big
+                                                p nc-map-big
+                                            li
+                                                i.nc-icon.nc-minimal-down
+                                                p nc-minimal-down
+                                            li
+                                                i.nc-icon.nc-minimal-left
+                                                p nc-minimal-left
+                                            li
+                                                i.nc-icon.nc-minimal-right
+                                                p nc-minimal-right
+                                            li
+                                                i.nc-icon.nc-minimal-up
+                                                p nc-minimal-up
+                                            li
+                                                i.nc-icon.nc-mobile
+                                                p nc-mobile
+                                            li
+                                                i.nc-icon.nc-money-coins
+                                                p nc-money-coins
+                                            li
+                                                i.nc-icon.nc-note-03
+                                                p nc-note-03
+                                            li
+                                                i.nc-icon.nc-palette
+                                                p nc-palette
+                                            li
+                                                i.nc-icon.nc-paper
+                                                p nc-paper
+                                            li
+                                                i.nc-icon.nc-pin-3
+                                                p nc-pin-3
+                                            li
+                                                i.nc-icon.nc-planet
+                                                p nc-planet
+                                            li
+                                                i.nc-icon.nc-refresh-69
+                                                p nc-refresh-69
+                                            li
+                                                i.nc-icon.nc-ruler-pencil
+                                                p nc-ruler-pencil
+                                            li
+                                                i.nc-icon.nc-satisfied
+                                                p nc-satisfied
+                                            li
+                                                i.nc-icon.nc-scissors
+                                                p nc-scissors
+                                            li
+                                                i.nc-icon.nc-send
+                                                p nc-send
+                                            li
+                                                i.nc-icon.nc-settings-gear-65
+                                                p nc-settings-gear-65
+                                            li
+                                                i.nc-icon.nc-settings
+                                                p nc-settings
+                                            li
+                                                i.nc-icon.nc-share-66
+                                                p nc-share-66
+                                            li
+                                                i.nc-icon.nc-shop
+                                                p nc-shop
+                                            li
+                                                i.nc-icon.nc-simple-add
+                                                p nc-simple-add
+                                            li
+                                                i.nc-icon.nc-simple-delete
+                                                p nc-simple-delete
+                                            li
+                                                i.nc-icon.nc-simple-remove
+                                                p nc-simple-remove
+                                            li
+                                                i.nc-icon.nc-single-02
+                                                p nc-single-02
+                                            li
+                                                i.nc-icon.nc-single-copy-04
+                                                p nc-single-copy-04
+                                            li
+                                                i.nc-icon.nc-sound-wave
+                                                p nc-sound-wave
+                                            li
+                                                i.nc-icon.nc-spaceship
+                                                p nc-spaceship
+                                            li
+                                                i.nc-icon.nc-sun-fog-29
+                                                p nc-sun-fog-29
+                                            li
+                                                i.nc-icon.nc-support-17
+                                                p nc-support-17
+                                            li
+                                                i.nc-icon.nc-tablet-2
+                                                p nc-tablet-2
+                                            li
+                                                i.nc-icon.nc-tag-content
+                                                p nc-tag-content
+                                            li
+                                                i.nc-icon.nc-tap-01
+                                                p nc-tap-01
+                                            li
+                                                i.nc-icon.nc-tie-bow
+                                                p nc-tie-bow
+                                            li
+                                                i.nc-icon.nc-tile-56
+                                                p nc-tile-56
+                                            li
+                                                i.nc-icon.nc-time-alarm
+                                                p nc-time-alarm
+                                            li
+                                                i.nc-icon.nc-touch-id
+                                                p nc-touch-id
+                                            li
+                                                i.nc-icon.nc-trophy
+                                                p nc-trophy
+                                            li
+                                                i.nc-icon.nc-tv-2
+                                                p nc-tv-2
+                                            li
+                                                i.nc-icon.nc-umbrella-13
+                                                p nc-umbrella-13
+                                            li
+                                                i.nc-icon.nc-user-run
+                                                p nc-user-run
+                                            li
+                                                i.nc-icon.nc-vector
+                                                p nc-vector
+                                            li
+                                                i.nc-icon.nc-watch-time
+                                                p nc-watch-time
+                                            li
+                                                i.nc-icon.nc-world-2
+                                                p nc-world-2
+                                            li
+                                                i.nc-icon.nc-zoom-split
+                                                p nc-zoom-split
+                                            // list of icons here with the proper class
+// Core JS Files
+script(src='./assets/js/core/jquery.min.js')
+script(src='./assets/js/core/popper.min.js')
+script(src='./assets/js/core/bootstrap.min.js')
+script(src='./assets/js/plugins/perfect-scrollbar.jquery.min.js')
+// Google Maps Plugin
+script(src='https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE')
+// Chart JS
+script(src='./assets/js/plugins/chartjs.min.js')
+// Notifications Plugin
+script(src='./assets/js/plugins/bootstrap-notify.js')
+// Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc
+script(src='./assets/js/paper-dashboard.min.js?v=2.0.1' type='text/javascript')
+// Paper Dashboard DEMO methods, don't include it in your project!
+script(src='./assets/demo/demo.js')
+script.
+    function SelectText(element) {
+    var doc = document,
+    text = element,
+    range, selection;
+    if (doc.body.createTextRange) {
+    range = document.body.createTextRange();
+    range.moveToElementText(text);
+    range.select();
+    } else if (window.getSelection) {
+    selection = window.getSelection();
+    range = document.createRange();
+    range.selectNodeContents(text);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    }
+    }
+    window.onload = function () {
+    var iconsWrapper = document.getElementById('icons-wrapper'),
+    listItems = iconsWrapper.getElementsByTagName('li');
+    each i in listItems.length 
+        i.onclick = function fun(event) {
+        var selectedTagName = event.target.tagName.toLowerCase();
+        if (selectedTagName == 'p' || selectedTagName == 'em') {
+        SelectText(event.target);
+        } else if (selectedTagName == 'input') {
+        event.target.setSelectionRange(0, event.target.value.length);
+        }
+
+    var beforeContentChar = window.getComputedStyle(listItems[i].getElementsByTagName('i')[0], '::before').getPropertyValue('content').replace(/'/g, "").replace(/"/g, ""),
+    beforeContent = beforeContentChar.charCodeAt(0).toString(16);
+    var beforeContentElement = document.createElement("em");
+    beforeContentElement.textContent = "\\\" + beforeContent;
+    listItems[i].appendChild(beforeContentElement);
+    //create input element to copy/paste chart
+    var charCharac = document.createElement('input');
+    charCharac.setAttribute('type', 'text');
+    charCharac.setAttribute('maxlength', '1');
+    charCharac.setAttribute('readonly', 'true');
+    charCharac.setAttribute('value', beforeContentChar);
+    listItems[i].appendChild(charCharac);
+    }
+    }

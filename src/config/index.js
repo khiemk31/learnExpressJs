@@ -3,10 +3,10 @@ const {v2: cloudinary} = require('cloudinary');
 const port = 5000;
 
 const mysqlConfig = {
-  host: 'localhost',
+  host: '127.0.0.1',
   user: 'modelfashion',
-  password: 'Bt8ELGhy68HTPytd',
-  port: 3306,
+  password: 'WeT2LX4Xx2kFnkFZ',
+  port: 3399,
   database: 'modelfashion',
 };
 
@@ -24,6 +24,9 @@ const private_key = 'admin';
 //tk twilo
 // ginhotaru282@gmail.com
 // dangtrungkien300197
+
+//khiemk31@gmail.com
+//nguyenduykhiem171098
 
 //cloudinary
 //ginhotaru282@gmail.com

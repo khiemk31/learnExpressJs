@@ -10,7 +10,6 @@ var jwt = require('jsonwebtoken');
 const twilio = require('twilio');
 const {accountSid, authToken} = require('../config');
 const userSQL = require('../sql/userSQL');
-const {render} = require('express/lib/response');
 const client = twilio(accountSid, authToken);
 
 //API checkUser
@@ -28,17 +27,20 @@ const checkUser = async (req, res) => {
 //API  registerUser
 const register = async (req, res) => {
   try {
-    const {user_id,phone, password, user_name} = req.body;
+    const {phone, password, user_name} = req.body;
     const connection = await getConnection(req);
+    const lengthListUser = (await query(connection, userSQL.queryAllUser)).length;
+    let id = 'USER' + (lengthListUser + 1);
+    console.log(id);
     const newPassword = await encodePassword(password);
     const newUser = {
-      user_id: user_id,
-      phone,
+      user_id: id,
+      phone: phone,
       password: newPassword,
       user_name,
-      gender: 1,
+      gender: 0,
       date_of_birth: new Date(),
-      permission	: 'user',
+      permission: 'user',
       active: 0,
       created_at: new Date(),
     };
@@ -74,7 +76,7 @@ const postInsertUser = async (req, res) => {
       user_name: data.user_name,
       gender: data.gender,
       address: data.address,
-      permission	: data.permission	,
+      permission: data.permission,
       avatar: avatar,
       active: 0,
       created_at: new Date(),
@@ -90,7 +92,6 @@ const postInsertUser = async (req, res) => {
 const login = async (req, res) => {
   try {
     const {phone, password} = req.body;
-
     const connection = await getConnection(req);
     const userBlock = await query(connection, UserSQL.getUserBlockQuerySQL, [phone]);
     if (isEmpty(userBlock)) {
@@ -332,8 +333,7 @@ const loginAdmin = async (req, res) => {
     if (isEmpty(userBlock)) {
       const admin = await query(connection, userSQL.getUserAdminQuerySQL, [data.phone.trim()]);
       const superAdmin = await query(connection, userSQL.getUserSupperAdminQuerySQL, [data.phone]);
-      if (isEmpty(data.phone.trim()) || isEmpty(data.password.trim()))
-        return res.status(500).json('Vui lòng nhập dữ liệu hợp lệ');
+      if (isEmpty(data.phone.trim()) || isEmpty(data.password.trim())) return res.status(500).json('Vui lòng nhập dữ liệu hợp lệ');
       if (isEmpty(admin) && isEmpty(superAdmin)) {
         return res.status(404).json('Số điện thoại chưa được đăng ký Admin');
       } else if (isEmpty(superAdmin)) {

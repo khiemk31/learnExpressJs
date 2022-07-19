@@ -23,10 +23,10 @@ const insertSize = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const {permission	} = req;
+    const {permission} = req;
     const size_id = req.params.id;
     const data = req.body;
-    if (permission	 !== 'admin') return res.status(403).json({message: "You don't have permission to access"});
+    if (permission !== 'admin') return res.status(403).json({message: "You don't have permission to access"});
     const connection = await getConnection(req);
     const getSize = await query(connection, selectSizeByIdQuery, [size_id]);
     if (isEmpty(getSize)) return res.status(404).json({message: 'size not found'});
@@ -44,10 +44,10 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    const {permission	} = req;
+    const {permission} = req;
     const size_id = req.params.id;
     const connection = await getConnection(req);
-    if (permission	 !== 'admin') return res.status(403).json({message: "You don't have permission to access"});
+    if (permission !== 'admin') return res.status(403).json({message: "You don't have permission to access"});
     const sizes = await query(connection, selectSizeByIdQuery, [size_id]);
     if (isEmpty(sizes)) return res.status(404).json({message: 'size not found'});
     await query(connection, removeSizeQuery, [new Date(), size_id]);

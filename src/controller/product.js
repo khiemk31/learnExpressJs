@@ -4,7 +4,6 @@ const sizeSQL = require('../sql/sizeSQL');
 const categorySQL = require('../sql/categorySQL');
 const {getConnection, query} = require('../utils/database');
 const {uploadImage} = require('../utils/image');
-const {render} = require('express/lib/response');
 const moment = require('moment');
 const {getTotalPage} = require('../utils/index');
 const {formatMoney} = require('../utils/formatMoney');
@@ -161,22 +160,11 @@ const update = async (req, res) => {
 };
 
 // API MOBILE
-const getList = async (req, res) => {
+const getAllProductByCategory = async (req, res) => {
   try {
-    const {offset} = req.query;
     const connection = await getConnection(req);
-    const getProductLimit = `SELECT product.product_id ,product.product_name, product.product_image , product.price  
-    FROM  product , category 
-    WHERE  product.category_id = category.category_id and  product.deleted_at is NULL and category.deleted_at is NULL 
-    LIMIT  10 
-    OFFSET  ${offset}`;
-    const listProductLimit = await query(connection, getProductLimit);
-    const listAllProduct = await query(connection, productSQL.getAllProduct);
-    return res.status(200).json({
-      message: 'success',
-      listProduct: listProductLimit,
-      totalPage: getTotalPage(listAllProduct.length, 10),
-    });
+    const listProduct = await query(connection, productSQL.getAllProductByCategory);
+    return res.status(200).json({message: 'success', listProduct: listProduct});
   } catch (e) {
     return res.status(500).json({message: `${e}`});
   }
@@ -207,11 +195,11 @@ const getProductDetail = async (req, res) => {
   try {
     const {id} = req.params;
     const connection = await getConnection(req);
-    const product = await query(connection, productSQL.detailProductQuery, [id]);
+    const product = await query(connection, productSQL.getDetailProduct, [id]);
     if (isEmpty(product)) {
       return res.status(404).json({message: 'Product not found'});
     }
-    const listSize = await query(connection, productSQL.listSizeProductQuery, [id]);
+    const listSize = await query(connection, productSQL.getListSizeDetailProduct, [id]);
 
     return res.status(200).json({product, listSize});
   } catch (e) {
@@ -266,7 +254,7 @@ module.exports = {
   listProductCreated,
   insertProduct,
   add,
-  getList,
+  getAllProductByCategory,
   getProductByCategory,
   getProductDetail,
   getProductByPrice,
