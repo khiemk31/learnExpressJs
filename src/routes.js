@@ -9,7 +9,6 @@ const middleware = require('../src/utils/middleware/authenToken.middleware');
 module.exports = (router) => {
   //Main Router
   router.get('/main', middleware.requireAuth, view.main);
-  router.get('/icons', view.icons);
   //category API
   router.get('/category/getAll', category.getAll);
   //category Web View

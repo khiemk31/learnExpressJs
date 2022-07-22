@@ -113,7 +113,7 @@ head
                                 .col-7.col-md-8
                                     .numbers
                                         p.card-category.text-danger Đơn Đã Bán
-                                        p.card-title.text-success= donDaGiao
+                                        p.card-title.text-success= donDaGiao 
                         .card-footer
                             hr
                             .stats
@@ -155,8 +155,7 @@ head
                 .col-md-12
                     .card
                         .card-header
-                            h5.card-title Users Behavior
-                            p.card-category 24 Hours performance
+                            h5.card-title Thống Kế Doanh Số
                         .card-body
                             canvas#chartHours(width='400' height='100')
                         .card-footer
@@ -164,6 +163,9 @@ head
                             .stats
                                 i.fa.fa-history
                                 |  Updated 3 minutes ago
+                            .stats
+                                a(href='/main')
+                                    i.fa.fa-refresh   Update Now
             .row
                 .col-md-4
                     .card
@@ -224,6 +226,7 @@ script
 script(src='')
 script.
     $(document).ready(function() {
+        $()
     // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
-    demo.initChartsPages();
+    demo.initChartsPages(ListDoanhThu);
     });
