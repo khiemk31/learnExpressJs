@@ -31,7 +31,6 @@ const main = async (req, res) => {
 
   res.render('main', {
     ListDoanhThu: ListDoanhThu,
-    numberUsers: numberUsers[0].numberUsers,
     tongDoanhThu: tongDoanhThu[0].TongDoanhThu,
     donDaGiao: donDaGiao[0].DonDaGiao,
     donDangXuLy: donDangXuLy[0].DonDangXuLy,
