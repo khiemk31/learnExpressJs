@@ -5,6 +5,7 @@ const {uploadImage} = require('../utils/image');
 const {decodeOTP, encodeOTP, generateOTP, sendOTP} = require('../utils/otp');
 const UserSQL = require('../sql/userSQL');
 const moment = require('moment');
+const {formatMoney} = require('../utils/formatMoney');
 var jwt = require('jsonwebtoken');
 
 const twilio = require('twilio');
@@ -307,27 +308,17 @@ const loginAdmin = async (req, res) => {
   try {
     const data = req.body;
     const connection = await getConnection(req);
-    const queryDoanhThu = `SELECT MONTH(created_at) as month ,SUM(total_price) as DoanhThu FROM bill WHERE status="Đã Giao" AND YEAR(created_at) = 2022 GROUP BY MONTH(created_at) ORDER BY MONTH(created_at) ASC`;
-    const ListDoanhThu = await query(connection, queryDoanhThu);
-    for (const doanhthu of ListDoanhThu) {
-      doanhthu.DoanhThu = formatMoney(doanhthu.DoanhThu);
-    }
-    queryTop10User = `SELECT user.user_name,bill.user_id , COUNT(bill.bill_id) as SoLuongDon 
-    FROM bill ,user 
-    WHERE user.user_id = bill.user_id AND status="Đã Giao"
-    GROUP BY user_id 
-    ORDER BY COUNT(bill_id) DESC LIMIT 0,10`;
-    const listTop10User = await query(connection, queryTop10User);
-    queryCountBillDone = `SELECT COUNT(bill_id) as bill_done FROM bill WHERE status="Đã Giao"`;
-    queryCountBillCanceled = `SELECT COUNT(bill_id) as countBillCanceled FROM bill WHERE status="Đã Hủy"`;
-    queryCountBillReturnRequest = `SELECT COUNT(bill_id) as countBillReturnRequest FROM bill WHERE status="Đã Hoàn"`;
-    queryCountBillWaiting = `SELECT COUNT(bill_id) as countBillWaiting FROM bill WHERE status="Đang Chờ" OR status="Đang Xử Lý" OR status="Đang Giao"`;
-    queryCountBillFail = `SELECT COUNT(bill_id) as countBillFail FROM bill WHERE status="Giao Thất Bại"`;
-    const countBillDone = await query(connection, queryCountBillDone);
-    const countBillCanceled = await query(connection, queryCountBillCanceled);
-    const countBillReturnRequest = await query(connection, queryCountBillReturnRequest);
-    const countBillWaiting = await query(connection, queryCountBillWaiting);
-    const countBillFail = await query(connection, queryCountBillFail);
+
+    queryTongDoanhThu = `SELECT SUM(total_price) as TongDoanhThu FROM bill WHERE status="Hoàn Thành" `;
+    queryDonHoanThanh = `SELECT COUNT(bill_id) as DonDaGiao FROM bill WHERE status="Hoàn Thành" `;
+    queryDonDangXuLy = `SELECT COUNT(bill_id) as DonDangXuLy FROM bill WHERE status="Chờ Xác Nhận" OR status="Yêu Cầu Hủy Đơn" OR status="Yêu Cầu Trả Đơn" OR status="Đang Giao"`;
+    queryDonThatBai = `SELECT COUNT(bill_id) as DonThatBai FROM bill WHERE status="Đã Hủy" OR status="Đã Hoàn" OR status="Thất Bại" OR status="Từ Chối"`;
+
+    const tongDoanhThu = await query(connection, queryTongDoanhThu);
+    tongDoanhThu[0].TongDoanhThu = formatMoney(tongDoanhThu[0].TongDoanhThu);
+    const donDaGiao = await query(connection, queryDonHoanThanh);
+    const donDangXuLy = await query(connection, queryDonDangXuLy);
+    const donThatBai = await query(connection, queryDonThatBai);
 
     const userBlock = await query(connection, userSQL.getUserBlockQuerySQL, [data.phone.trim()]);
     if (isEmpty(userBlock)) {
@@ -341,30 +332,24 @@ const loginAdmin = async (req, res) => {
         const token = jwt.sign({user_id: admin[0].user_id}, process.env.ACCESS_TOKEN_SECRET);
         res.cookie('token', token);
         res.render('main', {
-          ListDoanhThu: ListDoanhThu,
-          listTop10User: listTop10User,
-          countBillDone: countBillDone[0].bill_done,
-          countBillCanceled: countBillCanceled[0].countBillCanceled,
-          countBillReturnRequest: countBillReturnRequest[0].countBillReturnRequest,
-          countBillWaiting: countBillWaiting[0].countBillWaiting,
-          countBillFail: countBillFail[0].countBillFail,
+          tongDoanhThu: tongDoanhThu[0].TongDoanhThu,
+          donDaGiao: donDaGiao[0].DonDaGiao,
+          donDangXuLy: donDangXuLy[0].DonDangXuLy,
+          donThatBai: donThatBai[0].DonThatBai,
         });
       } else {
         await comparePassword(superAdmin[0], data.password);
         const token = jwt.sign({user_id: superAdmin[0].user_id}, process.env.ACCESS_TOKEN_SECRET);
         res.cookie('token', token);
         res.render('main', {
-          ListDoanhThu: ListDoanhThu,
-          listTop10User: listTop10User,
-          countBillDone: countBillDone[0].bill_done,
-          countBillCanceled: countBillCanceled[0].countBillCanceled,
-          countBillReturnRequest: countBillReturnRequest[0].countBillReturnRequest,
-          countBillWaiting: countBillWaiting[0].countBillWaiting,
-          countBillFail: countBillFail[0].countBillFail,
+          tongDoanhThu: tongDoanhThu[0].TongDoanhThu,
+          donDaGiao: donDaGiao[0].DonDaGiao,
+          donDangXuLy: donDangXuLy[0].DonDangXuLy,
+          donThatBai: donThatBai[0].DonThatBai,
         });
       }
     } else {
-      return res.status(999).json({message: 'UserBlock Cút cmm đi'});
+      return res.status(999).json({message: 'TK Admin đã bị khóa'});
     }
   } catch (e) {
     return res.status(500).json({message: `${e}`});
