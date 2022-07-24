@@ -163,34 +163,19 @@ const update = async (req, res) => {
 const getAllProductByCategory = async (req, res) => {
   try {
     const connection = await getConnection(req);
-    const listProduct = await query(connection, productSQL.getAllProductByCategory);
-    return res.status(200).json({message: 'success', listProduct: listProduct});
-  } catch (e) {
-    return res.status(500).json({message: `${e}`});
-  }
-};
-const getProductByCategory = async (req, res) => {
-  try {
-    const {id} = req.params;
-    const {offset} = req.query;
-    const connection = await getConnection(req);
-    const getProductLimit = `SELECT product.product_id ,product.product_name, product.product_image , product.price  
-    FROM  product , category 
-    WHERE  product.category_id = category.category_id and  product.deleted_at is NULL and category.deleted_at is NULL  and category.category_id= ${id} 
-    LIMIT  10 
-    OFFSET  ${offset}`;
-    const listProductLimit = await query(connection, getProductLimit);
-    const listAllProduct = await query(connection, productSQL.queryProductByCategory, [id]);
-    return res.status(200).json({
-      message: 'success',
-      listProduct: listProductLimit,
-      totalPage: getTotalPage(listAllProduct.length, 10),
-    });
-  } catch (e) {
-    return res.status(500).json({message: `${e}`});
-  }
-};
+    const listCategory = await query(connection, categorySQL.queryListCategory);
+    const listAllProduct = [];
 
+    for (const category of listCategory) {
+      const listProduct = await query(connection, productSQL.queryProductByCategory, [category.category_id]);
+      listAllProduct.push(listProduct);
+    }
+    console.log(listAllProduct);
+    return res.status(200).json({message: 'success', listAllProduct: listAllProduct});
+  } catch (e) {
+    return res.status(500).json({message: `${e}`});
+  }
+};
 const getProductDetail = async (req, res) => {
   try {
     const {id} = req.params;
@@ -200,44 +185,19 @@ const getProductDetail = async (req, res) => {
       return res.status(404).json({message: 'Product not found'});
     }
     const listSize = await query(connection, productSQL.getListSizeDetailProduct, [id]);
-
     return res.status(200).json({product, listSize});
   } catch (e) {
     return res.status(500).json({message: `${e}`});
   }
 };
-const getProductByPrice = async (req, res) => {
-  try {
-    const {category_name, price1, price2, sort, offset} = req.query;
-    const connection = await getConnection(req);
-    const getProductLimit = `SELECT product.product_id ,product.product_name, product.price , product.product_image , category.category_name 
-    FROM product , category 
-    WHERE product.category_id=category.category_id AND category.category_name = '${category_name}' AND product.price BETWEEN ${price1} AND ${price2} AND product.deleted_at IS null AND category.deleted_at IS null 
-    ORDER BY product.price ${sort}  
-    LIMIT  10 
-    OFFSET  ${offset}`;
-    const listProductLimit = await query(connection, getProductLimit);
-    const queryProductByPriceAndCategory = `SELECT product.product_id ,product.product_name, product.price , product.product_image , category.category_name 
-    FROM product , category 
-    WHERE product.category_id=category.category_id AND category.category_name = '${category_name}' AND  product.price BETWEEN ${price1} AND ${price2}  AND product.deleted_at IS null AND category.deleted_at IS null 
-    ORDER BY product.price ${sort} `;
-    const listAllProduct = await query(connection, queryProductByPriceAndCategory);
-    return res.status(200).json({
-      message: 'success',
-      listProduct: listProductLimit,
-      totalPage: getTotalPage(listAllProduct.length, 10),
-    });
-  } catch (e) {
-    return res.status(500).json({message: `${e}`});
-  }
-};
+//Tất cả sp giảm giá (Màn Home)
 const getProductDiscount = async (req, res) => {
   try {
     const connection = await getConnection(req);
     const getProductDiscount = `SELECT product.product_id ,product.product_name, product.price , product.product_image , product.discount
     FROM product , category 
     WHERE product.category_id=category.category_id  AND product.discount BETWEEN 0  AND 99 AND product.deleted_at IS null AND category.deleted_at IS null 
-    ORDER BY product.price ASC `;
+    ORDER BY product.discount DESC `;
     const listProductDiscount = await query(connection, getProductDiscount);
     return res.status(200).json({
       message: 'success',
@@ -247,7 +207,82 @@ const getProductDiscount = async (req, res) => {
     return res.status(500).json({message: `${e}`});
   }
 };
+// Tất cả sản phẩm giảm giá (Màn xem tất cả,Có phân trang)
+const getAllProductDiscount = async (req, res) => {
+  try {
+    const {price1, price2, sortPrice, sortDiscount, pageNumber} = req.query;
+    const connection = await getConnection(req);
+    var offset = 0;
+    if (pageNumber == 1) {
+      offset = 0;
+    } else if (pageNumber > 1) {
+      offset = (pageNumber - 1) * 10;
+    }
+
+    const getAllProductDiscount = `SELECT product.product_id ,product.product_name, product.price , product.product_image , product.discount
+    FROM product , category 
+    WHERE product.category_id=category.category_id  
+    AND product.price BETWEEN ${price1}  AND ${price2} AND product.deleted_at IS null AND category.deleted_at IS null 
+    ORDER BY product.discount ${sortDiscount} ,product.price ${sortPrice}`;
+    const getProductLimit = `SELECT product.product_id ,product.product_name, product.price , product.product_image , product.discount
+    FROM product , category 
+    WHERE product.category_id=category.category_id  
+    AND product.price BETWEEN ${price1}  AND ${price2} AND product.deleted_at IS null AND category.deleted_at IS null 
+    ORDER BY product.discount ${sortDiscount} ,product.price ${sortPrice}
+    LIMIT  10
+    OFFSET  ${offset}`;
+
+    const listAllProduct = await query(connection, getAllProductDiscount);
+    const listProductLimit = await query(connection, getProductLimit);
+    return res.status(200).json({
+      message: 'success',
+      listProduct: listProductLimit,
+      totalPage: getTotalPage(listAllProduct.length, 10),
+    });
+  } catch (e) {
+    return res.status(500).json({message: `${e}`});
+  }
+};
+//Tất cả sản phẩm theo thể loại ( Có Phân Trang):
+const getProductByCategory = async (req, res) => {
+  try {
+    const {category_id, price1, price2, sortPrice, sortDiscount, pageNumber} = req.query;
+    const connection = await getConnection(req);
+    var offset = 0;
+    if (pageNumber == 1) {
+      offset = 0;
+    } else if (pageNumber > 1) {
+      offset = (pageNumber - 1) * 10;
+    }
+    const getAllProductDiscount = `SELECT product.product_id ,product.product_name, product.price , product.product_image , product.discount
+    FROM product , category 
+    WHERE product.category_id=category.category_id
+    AND category.category_id = ${category_id}
+    AND product.price BETWEEN ${price1}  AND ${price2} AND product.deleted_at IS null AND category.deleted_at IS null 
+    ORDER BY product.discount ${sortDiscount} ,product.price ${sortPrice}`;
+    const getProductLimit = `SELECT product.product_id ,product.product_name, product.price , product.product_image , product.discount
+    FROM product , category 
+    WHERE product.category_id=category.category_id  
+    AND category.category_id = ${category_id}
+    AND product.price BETWEEN ${price1}  AND ${price2} AND product.deleted_at IS null AND category.deleted_at IS null 
+    ORDER BY product.discount ${sortDiscount} ,product.price ${sortPrice}
+    LIMIT  10
+    OFFSET  ${offset}`;
+    const listAllProduct = await query(connection, getAllProductDiscount);
+    const listProductLimit = await query(connection, getProductLimit);
+
+    return res.status(200).json({
+      message: 'success',
+      listProduct: listProductLimit,
+      totalPage: getTotalPage(listAllProduct.length, 10),
+    });
+  } catch (e) {
+    return res.status(500).json({message: `${e}`});
+  }
+};
+
 module.exports = {
+  getAllProductDiscount,
   getProductDiscount,
   update,
   getUpdate,
@@ -257,7 +292,6 @@ module.exports = {
   getAllProductByCategory,
   getProductByCategory,
   getProductDetail,
-  getProductByPrice,
   search,
   listProductDeleted,
   productDetail,

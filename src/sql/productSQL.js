@@ -11,7 +11,7 @@ module.exports = {
   insertListImage: `INSERT INTO product_detail_image set ?`,
   getDetailProduct: `SELECT  product_id, product_name ,price ,discount ,product_image ,product_bgr1 ,product_bgr2 ,product_bgr3    FROM  product  WHERE product.product_id = ?`,
   getListSizeDetailProduct: `select size , quantity from size where  product_id=?`,
-  queryProductByCategory: `SELECT product.product_id ,product.product_name, product.product_image , product.price  from  product , category WHERE  product.category_id = category.category_id and  product.deleted_at is NULL and category.deleted_at is NULL and category.category_id=?`,
+  queryProductByCategory: `SELECT category.category_name , category.category_id , product.product_id ,product.product_name, product.product_image , product.price , product.discount  from  product , category WHERE  product.category_id = category.category_id and  product.deleted_at is NULL and category.deleted_at is NULL and category.category_id=?`,
   querySearchProductByName: `SELECT product.product_id ,product.product_name, product.product_image , product.price  from  product , category WHERE  product.category_id = category.category_id and  product.deleted_at is NULL and category.deleted_at is NULL and product.product_name LIKE % =? `,
   getAllProductByCategory: `SELECT category.category_id, category.category_name , product.product_id ,product.product_name, product.product_image , product.price , product.discount FROM product , category WHERE product.category_id = category.category_id and product.deleted_at is NULL and category.deleted_at is NULL ORDER BY category.category_id ASC , product.discount DESC`,
 };

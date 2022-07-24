@@ -98,7 +98,7 @@ demo = {
 
   initChartsPages: function (ListDoanhThu) {
     chartColor = '#FFFFFF';
-    console.log(ListDoanhThu);
+    console.log(ListDoanhThu[0]);
     ctx = document.getElementById('chartHours').getContext('2d');
     console.log('DDDDDDDDDDD', string1);
     var xValues = ListDoanhThu.month;

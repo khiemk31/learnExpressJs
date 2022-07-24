@@ -1,0 +1,92 @@
+extends ../views/header
+
+block content 
+    title CHI TIẾT SẢN PHẨM
+
+    .app-container.app-theme-white.body-tabs-shadow.fixed-sidebar.fixed-header
+        //- // header
+        .app-header.header-shadow
+            // logo
+            .app-header__logo
+                .logo-src(style="color: #000;width: 100% ; font-size: 25px; margin-bottom:15px;") Model Fashion
+                .header__pane.ml-auto
+                div
+                    button.hamburger.close-sidebar-btn.hamburger--elastic(type='button' data-class='closed-sidebar')
+                    span.hamburger-box
+                        span.hamburger-inner
+            //profile me      
+            .dropdown.user-menu(style="margin-left:750px; float: right;")
+                button.dropdown-toggle.nav-link(href='#' data-toggle='dropdown')
+                    img.user-image(src='assets/img/user/user.png' alt='User Image')
+                    span.d-none.d-lg-inline-block Abdus Salam
+                .dropdown-menu(aria-labelledby='dropdownMenuButton')
+                    a.dropdown-item(href='#') Thông tin cá nhân
+                    hr
+                    a.dropdown-item(href='/login') Đăng xuất
+        // body
+        .app-main
+            //menu left
+            .app-sidebar.sidebar-shadow
+                .scrollbar-sidebar
+                    .app-sidebar__inner
+                        ul.vertical-nav-menu
+                            li.app-sidebar__heading Menu
+                            li
+                                a(href='/main')   Trang chủ
+                            li
+                                a(href='/user' )  Người dùng
+                            li
+                                a(href='/category' )  Thể loại
+                            li
+                                a(href='/product')   Sản phẩm
+                            li
+                                a(href='/bill')    Quản Lý Đơn Hàng
+            //- // content
+
+            .app-main__outer
+                .content-wrapper
+                    .content
+                        .bg-white.border.rounded
+                            h1text-blue-400.font-semibold.mb-4(class='text-[40px] leading-[55px]')
+                                | Thông tin chi tiết sản phẩm
+                            .row.no-gutters
+                                .col-lg-4.col-xl-3
+                                    .profile-content-left.pt-5.pb-3.px-3.px-xl-5(style="width: 400px;")
+                                        .card.text-center.widget-profile.px-0.border-0
+                                            .card-img.mx-auto.rounded-circle
+                                                img(src=product.product_image, alt='product image' style="padding:10px;")
+                                            .card-body
+                                                p(style="color: #000;width: 100% ; font-size: 20px")= product.product_name
+                                            .card-body
+                                                p(style="color: #000 ; font-size: 20px;float: left;") Giá bán :
+                                                p(style="color: #000;width: 100% ; font-size: 20px;")= product.price+" đ" 
+                                            .card-body
+                                                p(style="color: #000 ; font-size: 20px; float: left;") Số Lượng Đã Bán :
+                                                p(style="color: #000;width: 100% ; font-size: 20px;")= product.quantity_sold
+                                            .card-body
+                                                p(style="color: #000 ; font-size: 20px; float: left;") Ngày đăng bán :
+                                                p(style="color: #000;width: 100% ; font-size: 20px;")= product.created_at
+                                            div
+                                                p.ml-2(class='text-[#4285F4] text-[20px]') Bảng size sản phẩm
+                                                table.table.table-striped
+                                                    thead
+                                                        tr
+                                                            th(scope='col') Loại size
+                                                            th(scope='col') Số lượng
+                                                    each size in listSizeProduct
+                                                        tbody
+                                                            tr
+                                                                td()= size.size  
+                                                                td()= size.quantity
+                                .col-lg-8.col-xl-9
+                                    .profile-content-right.py-5
+                                        div(style="width:700px;float :right;")
+                                            p.ml-2(class='text-[#4285F4] text-[20px]') Ảnh minh họa sản phẩm
+                                            .media-body
+                                                .d-inline-block.rounded.overflow-hidden.mt-3.mr-0.mr-lg-4
+                                                    img(src=product.product_bgr1, alt='Product')
+                                                .d-inline-block.rounded.overflow-hidden.mt-3.mr-0.mr-lg-4
+                                                    img(src=product.product_bgr2, alt='Product')
+                                                .d-inline-block.rounded.overflow-hidden.mt-3.mr-0.mr-lg-4
+                                                    img(src=product.product_bgr3, alt='Product')
+

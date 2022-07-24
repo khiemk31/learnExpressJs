@@ -9,7 +9,6 @@ const main = async (req, res) => {
   queryDonDangXuLy = `SELECT COUNT(bill_id) as DonDangXuLy FROM bill WHERE status="Chờ Xác Nhận" OR status="Yêu Cầu Hủy Đơn" OR status="Yêu Cầu Trả Đơn" OR status="Đang Giao"`;
   queryDonThatBai = `SELECT COUNT(bill_id) as DonThatBai FROM bill WHERE status="Đã Hủy" OR status="Đã Hoàn" OR status="Thất Bại" OR status="Từ Chối"`;
   const ListDoanhThu = await query(connection, queryDoanhThu);
-  console.log(ListDoanhThu);
   const tongDoanhThu = await query(connection, queryTongDoanhThu);
   tongDoanhThu[0].TongDoanhThu = formatMoney(tongDoanhThu[0].TongDoanhThu);
   const donDaGiao = await query(connection, queryDonHoanThanh);
@@ -21,8 +20,6 @@ const main = async (req, res) => {
   WHERE user.user_id = bill.user_id AND status="Đã Giao"
   GROUP BY user_id 
   ORDER BY COUNT(bill_id) DESC LIMIT 0,10`;
-  // console.log(listMoney);
-  // console.log(listMonth);
   res.render('main', {
     ListDoanhThu: ListDoanhThu,
     tongDoanhThu: tongDoanhThu[0].TongDoanhThu,

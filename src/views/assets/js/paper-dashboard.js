@@ -1,21 +1,4 @@
-/*!
-
- =========================================================
- * Paper Dashboard 2 - v2.0.1
- =========================================================
-
- * Product Page: https://www.creative-tim.com/product/paper-dashboard-2
- * Copyright 2020 Creative Tim (http://www.creative-tim.com)
-
- * Designed by www.invisionapp.com Coded by www.creative-tim.com
-
- =========================================================
-
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
- */
-
-(function() {
+(function () {
   isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;
 
   if (isWindows) {
@@ -24,7 +7,6 @@
     var ps1 = new PerfectScrollbar('.sidebar-wrapper');
     var ps2 = new PerfectScrollbar('.main-panel');
     $('html').addClass('perfect-scrollbar-on');
-
   } else {
     $('html').addClass('perfect-scrollbar-off');
   }
@@ -39,18 +21,19 @@ backgroundOrange = false;
 sidebar_mini_active = false;
 toggle_initialized = false;
 
-seq = 0, delays = 80, durations = 500;
-seq2 = 0, delays2 = 80, durations2 = 500;
+(seq = 0), (delays = 80), (durations = 500);
+(seq2 = 0), (delays2 = 80), (durations2 = 500);
 
-$(document).ready(function() {
-
+$(document).ready(function () {
   if ($('.full-screen-map').length == 0 && $('.bd-docs').length == 0) {
     // On click navbar-collapse the menu will be white not transparent
-    $('.collapse').on('show.bs.collapse', function() {
-      $(this).closest('.navbar').removeClass('navbar-transparent').addClass('bg-white');
-    }).on('hide.bs.collapse', function() {
-      $(this).closest('.navbar').addClass('navbar-transparent').removeClass('bg-white');
-    });
+    $('.collapse')
+      .on('show.bs.collapse', function () {
+        $(this).closest('.navbar').removeClass('navbar-transparent').addClass('bg-white');
+      })
+      .on('hide.bs.collapse', function () {
+        $(this).closest('.navbar').addClass('navbar-transparent').removeClass('bg-white');
+      });
   }
 
   paperDashboard.initMinimizeSidebar();
@@ -61,69 +44,72 @@ $(document).ready(function() {
   // Check if we have the class "navbar-color-on-scroll" then add the function to remove the class "navbar-transparent" so it will transform to a plain color.
   if ($('.navbar[color-on-scroll]').length != 0) {
     paperDashboard.checkScrollForTransparentNavbar();
-    $(window).on('scroll', paperDashboard.checkScrollForTransparentNavbar)
+    $(window).on('scroll', paperDashboard.checkScrollForTransparentNavbar);
   }
 
-  $('.form-control').on("focus", function() {
-    $(this).parent('.input-group').addClass("input-group-focus");
-  }).on("blur", function() {
-    $(this).parent(".input-group").removeClass("input-group-focus");
-  });
+  $('.form-control')
+    .on('focus', function () {
+      $(this).parent('.input-group').addClass('input-group-focus');
+    })
+    .on('blur', function () {
+      $(this).parent('.input-group').removeClass('input-group-focus');
+    });
 
   // Activate bootstrapSwitch
-  $('.bootstrap-switch').each(function() {
+  $('.bootstrap-switch').each(function () {
     $this = $(this);
     data_on_label = $this.data('on-label') || '';
     data_off_label = $this.data('off-label') || '';
 
     $this.bootstrapSwitch({
       onText: data_on_label,
-      offText: data_off_label
+      offText: data_off_label,
     });
   });
 });
 
-$(document).on('click', '.navbar-toggle', function() {
+$(document).on('click', '.navbar-toggle', function () {
   $toggle = $(this);
 
   if (paperDashboard.misc.navbar_menu_visible == 1) {
     $('html').removeClass('nav-open');
     paperDashboard.misc.navbar_menu_visible = 0;
-    setTimeout(function() {
+    setTimeout(function () {
       $toggle.removeClass('toggled');
       $('#bodyClick').remove();
     }, 550);
-
   } else {
-    setTimeout(function() {
+    setTimeout(function () {
       $toggle.addClass('toggled');
     }, 580);
 
     div = '<div id="bodyClick"></div>';
-    $(div).appendTo('body').click(function() {
-      $('html').removeClass('nav-open');
-      paperDashboard.misc.navbar_menu_visible = 0;
-      setTimeout(function() {
-        $toggle.removeClass('toggled');
-        $('#bodyClick').remove();
-      }, 550);
-    });
+    $(div)
+      .appendTo('body')
+      .click(function () {
+        $('html').removeClass('nav-open');
+        paperDashboard.misc.navbar_menu_visible = 0;
+        setTimeout(function () {
+          $toggle.removeClass('toggled');
+          $('#bodyClick').remove();
+        }, 550);
+      });
 
     $('html').addClass('nav-open');
     paperDashboard.misc.navbar_menu_visible = 1;
   }
 });
 
-$(window).resize(function() {
+$(window).resize(function () {
   // reset the seq for charts drawing animations
   seq = seq2 = 0;
 
   if ($('.full-screen-map').length == 0 && $('.bd-docs').length == 0) {
     $navbar = $('.navbar');
-    isExpanded = $('.navbar').find('[data-toggle="collapse"]').attr("aria-expanded");
+    isExpanded = $('.navbar').find('[data-toggle="collapse"]').attr('aria-expanded');
     if ($navbar.hasClass('bg-white') && $(window).width() > 991) {
       $navbar.removeClass('bg-white').addClass('navbar-transparent');
-    } else if ($navbar.hasClass('navbar-transparent') && $(window).width() < 991 && isExpanded != "false") {
+    } else if ($navbar.hasClass('navbar-transparent') && $(window).width() < 991 && isExpanded != 'false') {
       $navbar.addClass('bg-white').removeClass('navbar-transparent');
     }
   }
@@ -131,15 +117,15 @@ $(window).resize(function() {
 
 paperDashboard = {
   misc: {
-    navbar_menu_visible: 0
+    navbar_menu_visible: 0,
   },
 
-  initMinimizeSidebar: function() {
+  initMinimizeSidebar: function () {
     if ($('.sidebar-mini').length != 0) {
       sidebar_mini_active = true;
     }
 
-    $('#minimizeSidebar').click(function() {
+    $('#minimizeSidebar').click(function () {
       var $btn = $(this);
 
       if (sidebar_mini_active == true) {
@@ -153,36 +139,37 @@ paperDashboard = {
       }
 
       // we simulate the window Resize so the charts will get updated in realtime.
-      var simulateWindowResize = setInterval(function() {
+      var simulateWindowResize = setInterval(function () {
         window.dispatchEvent(new Event('resize'));
       }, 180);
 
       // we stop the simulation of Window Resize after the animations are completed
-      setTimeout(function() {
+      setTimeout(function () {
         clearInterval(simulateWindowResize);
       }, 1000);
     });
   },
 
-  showSidebarMessage: function(message) {
+  showSidebarMessage: function (message) {
     try {
-      $.notify({
-        icon: "now-ui-icons ui-1_bell-53",
-        message: message
-      }, {
-        type: 'info',
-        timer: 4000,
-        placement: {
-          from: 'top',
-          align: 'right'
+      $.notify(
+        {
+          icon: 'now-ui-icons ui-1_bell-53',
+          message: message,
+        },
+        {
+          type: 'info',
+          timer: 4000,
+          placement: {
+            from: 'top',
+            align: 'right',
+          },
         }
-      });
+      );
     } catch (e) {
       console.log('Notify library is missing, please make sure you have the notifications library added.');
     }
-
-  }
-
+  },
 };
 
 function hexToRGB(hex, alpha) {
@@ -191,8 +178,8 @@ function hexToRGB(hex, alpha) {
     b = parseInt(hex.slice(5, 7), 16);
 
   if (alpha) {
-    return "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+    return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
   } else {
-    return "rgb(" + r + ", " + g + ", " + b + ")";
+    return 'rgb(' + r + ', ' + g + ', ' + b + ')';
   }
 }

@@ -5,12 +5,14 @@ const {uploadImage} = require('../utils/image');
 const {decodeOTP, encodeOTP, generateOTP, sendOTP} = require('../utils/otp');
 const UserSQL = require('../sql/userSQL');
 const moment = require('moment');
-const {formatMoney} = require('../utils/formatMoney');
 var jwt = require('jsonwebtoken');
 
 const twilio = require('twilio');
 const {accountSid, authToken} = require('../config');
 const userSQL = require('../sql/userSQL');
+const {formatMoney} = require('../utils/formatMoney');
+const {queryAllUser} = require('../sql/userSQL');
+const {getTotalPage} = require('../utils');
 const client = twilio(accountSid, authToken);
 
 //API checkUser
@@ -38,8 +40,8 @@ const register = async (req, res) => {
       user_id: id,
       phone: phone,
       password: newPassword,
-      user_name,
-      gender: 0,
+      user_name: user_name,
+      gender: 1,
       date_of_birth: new Date(),
       permission: 'user',
       active: 0,
@@ -93,6 +95,7 @@ const postInsertUser = async (req, res) => {
 const login = async (req, res) => {
   try {
     const {phone, password} = req.body;
+
     const connection = await getConnection(req);
     const userBlock = await query(connection, UserSQL.getUserBlockQuerySQL, [phone]);
     if (isEmpty(userBlock)) {
@@ -104,7 +107,7 @@ const login = async (req, res) => {
         return res.status(200).json({message: 'Đăng nhập thành công', data: user[0].user_id});
       }
     } else {
-      return res.status(999).json({message: 'UserBlock'});
+      return res.status(999).json({message: 'Tài khoản của bạn đã bị khóa !'});
     }
   } catch (e) {
     return res.status(500).json({message: `${e}`});
@@ -115,7 +118,7 @@ const login = async (req, res) => {
 const recoveryPassword = async (req, res) => {
   try {
     const {password, phone} = req.body;
-
+    console.log(`Recovery password`, password, phone);
     const connection = await getConnection(req);
     const user = await query(connection, UserSQL.getUserQuerySQL, [phone]);
     if (isEmpty(user)) {
@@ -141,19 +144,16 @@ const update = async (req, res) => {
       const date = date_of_birth.split('-');
       newDateOfBirth = `${date[2]}-${date[1]}-${date[0]}`;
     }
-
     const connection = await getConnection(req);
-    const user = await query(connection, `select * from user where user_id = '${user_id}'`);
-    if (isEmpty(user)) return res.status(404).json({message: 'User not found'});
+    const user = await query(connection, UserSQL.getUserById, [user_id]);
+    if (isEmpty(user)) return res.status(404).json({message: 'Không tìm thấy User'});
     await query(connection, UserSQL.updateUserSQL, [
-      {
-        user_name: user_name || null,
-        gender: gender || user[0].gender,
-        date_of_birth: newDateOfBirth || user[0].date_of_birth,
-        avatar: newAvatar?.url || avatar || user[0].avatar,
-        address: address || user[0].address,
-        updated_at: new Date(),
-      },
+      user_name || user[0].user_name || null,
+      gender || user[0].gender,
+      newDateOfBirth || user[0].date_of_birth,
+      newAvatar?.url || avatar || user[0].avatar,
+      address || user[0].address,
+      new Date(),
       user_id,
     ]);
     return res.status(200).json({message: 'Sửa thành công !'});
@@ -184,15 +184,24 @@ const detail = async (req, res) => {
 const userDetail = async (req, res) => {
   const user_id = req.params.id;
   const connection = await getConnection(req);
-  const detailUserQuery = 'select *  from user where  user_id=?';
+  detailUserQuery = 'select *  from user where  user_id=?';
+  queryDonDaDat = `SELECT COUNT(bill_id) AS soDon FROM bill WHERE (status="Đang Giao" OR status="Hoàn Thành" OR status="Chờ Xác Nhận") AND user_id=?`;
+  queryDonDaHuy = `SELECT COUNT(bill_id) AS soDon FROM bill WHERE (status="Đã Hủy" OR status="Đã Hoàn") AND user_id=?`;
+  queryDoanhThu = `SELECT SUM(total_price) AS doanhThu FROM bill WHERE status="Hoàn Thành" AND user_id=?`;
+  const donDaDat = await query(connection, queryDonDaDat, [user_id]);
+  const donDaHuy = await query(connection, queryDonDaHuy, [user_id]);
+  const doanhThu = await query(connection, queryDoanhThu, [user_id]);
   const user = await query(connection, detailUserQuery, [user_id]);
   if (user[0].date_of_birth) {
-    user.date_of_birth = moment(user.date_of_birth).format('DD-MM-YYYY');
+    user[0].date_of_birth = moment(user[0].date_of_birth).format('DD-MM-YYYY');
   }
   if (user[0].created_at) {
-    user.created_at = moment(user.created_at).format('DD-MM-YYYY');
+    user[0].created_at = moment(user[0].created_at).format('DD-MM-YYYY');
   }
-  res.render('detail_user', {user: user[0]});
+  if (doanhThu[0].doanhThu) {
+    doanhThu[0].doanhThu = formatMoney(doanhThu[0].doanhThu);
+  }
+  res.render('detail_user', {user: user[0], donDaDat: donDaDat[0].soDon, donDaHuy: donDaHuy[0].soDon, doanhThu: doanhThu[0].doanhThu});
 };
 
 const searchUser = async (req, res) => {
@@ -205,38 +214,56 @@ const searchUser = async (req, res) => {
 // API delete
 const blockUser = async (req, res) => {
   try {
-    // const {permission	} = req;
     const user_id = req.params.id;
-    // if (permission	 !== 'super admin') return res.status(403).json({message: 'Không có quyền xóa'});
     const connection = await getConnection(req);
     const removeUser = `update user set deleted_at =? , active=? where user_id=?`;
     await query(connection, removeUser, [new Date(), 1, user_id]);
-    const listUser = await query(connection, userSQL.queryListUser);
-    for (const user of listUser) {
-      if (user.date_of_birth) {
-        user.date_of_birth = moment(user.date_of_birth).format('DD-MM-YYYY');
-      }
+    detailUserQuery = 'select *  from user where  user_id=?';
+    queryDonDaDat = `SELECT COUNT(bill_id) AS soDon FROM bill WHERE (status="Đang Giao" OR status="Hoàn Thành" OR status="Chờ Xác Nhận") AND user_id=?`;
+    queryDonDaHuy = `SELECT COUNT(bill_id) AS soDon FROM bill WHERE (status="Đã Hủy" OR status="Đã Hoàn") AND user_id=?`;
+    queryDoanhThu = `SELECT SUM(total_price) AS doanhThu FROM bill WHERE status="Hoàn Thành" AND user_id=?`;
+    const donDaDat = await query(connection, queryDonDaDat, [user_id]);
+    const donDaHuy = await query(connection, queryDonDaHuy, [user_id]);
+    const doanhThu = await query(connection, queryDoanhThu, [user_id]);
+    const user = await query(connection, detailUserQuery, [user_id]);
+    if (user[0].date_of_birth) {
+      user[0].date_of_birth = moment(user[0].date_of_birth).format('DD-MM-YYYY');
     }
-    res.render('user', {listUser: listUser});
+    if (user[0].created_at) {
+      user[0].created_at = moment(user[0].created_at).format('DD-MM-YYYY');
+    }
+    if (doanhThu[0].doanhThu) {
+      doanhThu[0].doanhThu = formatMoney(doanhThu[0].doanhThu);
+    }
+    res.render('detail_user', {user: user[0], donDaDat: donDaDat[0].soDon, donDaHuy: donDaHuy[0].soDon, doanhThu: doanhThu[0].doanhThu});
   } catch (error) {
     return res.status(500).json({message: `${e}`});
   }
 };
 const activeUser = async (req, res) => {
   try {
-    // const {permission	} = req;
     const user_id = req.params.id;
-    // if (permission	 !== 'super admin') return res.status(403).json({message: 'Không có quyền xóa'});
     const connection = await getConnection(req);
     const activeUser = `update user set deleted_at =null, active=0 where user_id=?`;
     await query(connection, activeUser, [user_id]);
-    const listUser = await query(connection, userSQL.queryListUser);
-    for (const user of listUser) {
-      if (user.date_of_birth) {
-        user.date_of_birth = moment(user.date_of_birth).format('DD-MM-YYYY');
-      }
+    detailUserQuery = 'select *  from user where  user_id=?';
+    queryDonDaDat = `SELECT COUNT(bill_id) AS soDon FROM bill WHERE (status="Đang Giao" OR status="Hoàn Thành" OR status="Chờ Xác Nhận") AND user_id=?`;
+    queryDonDaHuy = `SELECT COUNT(bill_id) AS soDon FROM bill WHERE (status="Đã Hủy" OR status="Đã Hoàn") AND user_id=?`;
+    queryDoanhThu = `SELECT SUM(total_price) AS doanhThu FROM bill WHERE status="Hoàn Thành" AND user_id=?`;
+    const donDaDat = await query(connection, queryDonDaDat, [user_id]);
+    const donDaHuy = await query(connection, queryDonDaHuy, [user_id]);
+    const doanhThu = await query(connection, queryDoanhThu, [user_id]);
+    const user = await query(connection, detailUserQuery, [user_id]);
+    if (user[0].date_of_birth) {
+      user[0].date_of_birth = moment(user[0].date_of_birth).format('DD-MM-YYYY');
     }
-    res.render('user', {listUser: listUser});
+    if (user[0].created_at) {
+      user[0].created_at = moment(user[0].created_at).format('DD-MM-YYYY');
+    }
+    if (doanhThu[0].doanhThu) {
+      doanhThu[0].doanhThu = formatMoney(doanhThu[0].doanhThu);
+    }
+    res.render('detail_user', {user: user[0], donDaDat: donDaDat[0].soDon, donDaHuy: donDaHuy[0].soDon, doanhThu: doanhThu[0].doanhThu});
   } catch (error) {
     return res.status(500).json({message: `${e}`});
   }
@@ -308,18 +335,23 @@ const loginAdmin = async (req, res) => {
   try {
     const data = req.body;
     const connection = await getConnection(req);
-
+    queryDoanhThu = `SELECT MONTH(created_at) as month ,SUM(total_price) as DoanhThu FROM bill WHERE status="Hoàn Thành" AND YEAR(created_at) = 2022 GROUP BY MONTH(created_at) ORDER BY MONTH(created_at) ASC`;
     queryTongDoanhThu = `SELECT SUM(total_price) as TongDoanhThu FROM bill WHERE status="Hoàn Thành" `;
     queryDonHoanThanh = `SELECT COUNT(bill_id) as DonDaGiao FROM bill WHERE status="Hoàn Thành" `;
     queryDonDangXuLy = `SELECT COUNT(bill_id) as DonDangXuLy FROM bill WHERE status="Chờ Xác Nhận" OR status="Yêu Cầu Hủy Đơn" OR status="Yêu Cầu Trả Đơn" OR status="Đang Giao"`;
     queryDonThatBai = `SELECT COUNT(bill_id) as DonThatBai FROM bill WHERE status="Đã Hủy" OR status="Đã Hoàn" OR status="Thất Bại" OR status="Từ Chối"`;
-
+    const ListDoanhThu = await query(connection, queryDoanhThu);
     const tongDoanhThu = await query(connection, queryTongDoanhThu);
     tongDoanhThu[0].TongDoanhThu = formatMoney(tongDoanhThu[0].TongDoanhThu);
     const donDaGiao = await query(connection, queryDonHoanThanh);
     const donDangXuLy = await query(connection, queryDonDangXuLy);
     const donThatBai = await query(connection, queryDonThatBai);
 
+    queryTop10User = `SELECT user.user_name,bill.user_id , COUNT(bill.bill_id) as SoLuongDon 
+    FROM bill ,user 
+    WHERE user.user_id = bill.user_id AND status="Đã Giao"
+    GROUP BY user_id 
+    ORDER BY COUNT(bill_id) DESC LIMIT 0,10`;
     const userBlock = await query(connection, userSQL.getUserBlockQuerySQL, [data.phone.trim()]);
     if (isEmpty(userBlock)) {
       const admin = await query(connection, userSQL.getUserAdminQuerySQL, [data.phone.trim()]);
@@ -332,6 +364,7 @@ const loginAdmin = async (req, res) => {
         const token = jwt.sign({user_id: admin[0].user_id}, process.env.ACCESS_TOKEN_SECRET);
         res.cookie('token', token);
         res.render('main', {
+          ListDoanhThu: ListDoanhThu,
           tongDoanhThu: tongDoanhThu[0].TongDoanhThu,
           donDaGiao: donDaGiao[0].DonDaGiao,
           donDangXuLy: donDangXuLy[0].DonDangXuLy,
@@ -342,6 +375,7 @@ const loginAdmin = async (req, res) => {
         const token = jwt.sign({user_id: superAdmin[0].user_id}, process.env.ACCESS_TOKEN_SECRET);
         res.cookie('token', token);
         res.render('main', {
+          ListDoanhThu: ListDoanhThu,
           tongDoanhThu: tongDoanhThu[0].TongDoanhThu,
           donDaGiao: donDaGiao[0].DonDaGiao,
           donDangXuLy: donDangXuLy[0].DonDangXuLy,
@@ -349,7 +383,7 @@ const loginAdmin = async (req, res) => {
         });
       }
     } else {
-      return res.status(999).json({message: 'TK Admin đã bị khóa'});
+      return res.status(999).json({message: 'UserBlock Cút cmm đi'});
     }
   } catch (e) {
     return res.status(500).json({message: `${e}`});
@@ -359,13 +393,39 @@ const loginAdmin = async (req, res) => {
 const getAllUser = async (req, res) => {
   const connection = await getConnection(req);
   const listUser = await query(connection, userSQL.queryListUser);
+
   res.render('user', {listUser: listUser});
 };
 
 const getAll = async (req, res) => {
+  var {pageNumber} = req.query;
+  console.log('data có đc truyền chưa xử lý đúng' + pageNumber);
   const connection = await getConnection(req);
-  const listUser = await query(connection, userSQL.queryAllUser);
-  res.render('user', {listUser: listUser});
+  if (pageNumber) {
+    var offset = 0;
+    if (pageNumber == 1) {
+      offset = 0;
+    } else if (pageNumber > 1) {
+      offset = (pageNumber - 1) * 2;
+    }
+    queryLimitUser = `SELECT * FROM user LIMIT 2  OFFSET  ${offset}`;
+    const listUserLimit = await query(connection, queryLimitUser);
+    const listUser = await query(connection, userSQL.queryAllUser);
+    res.render('user', {listUser: listUserLimit, totalPage: getTotalPage(listUser.length, 2)});
+  } else {
+    pageNumber = 1;
+    var offset = 0;
+    if (pageNumber == 1) {
+      offset = 0;
+    } else if (pageNumber > 1) {
+      offset = (pageNumber - 1) * 2;
+    }
+
+    queryLimitUser = `SELECT * FROM user LIMIT 2  OFFSET  ${offset}`;
+    const listUserLimit = await query(connection, queryLimitUser);
+    const listUser = await query(connection, userSQL.queryAllUser);
+    res.render('user', {listUser: listUserLimit, totalPage: getTotalPage(listUser.length, 2)});
+  }
 };
 const getAllAdmin = async (req, res) => {
   const connection = await getConnection(req);
