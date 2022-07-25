@@ -3,15 +3,12 @@ const {getConnection, query} = require('../utils/database');
 const {isEmpty} = require('../utils/validate');
 const {uploadImage} = require('../utils/image');
 const {decodeOTP, encodeOTP, generateOTP, sendOTP} = require('../utils/otp');
-const UserSQL = require('../sql/userSQL');
 const moment = require('moment');
 var jwt = require('jsonwebtoken');
-
 const twilio = require('twilio');
 const {accountSid, authToken} = require('../config');
 const userSQL = require('../sql/userSQL');
 const {formatMoney} = require('../utils/formatMoney');
-const {queryAllUser} = require('../sql/userSQL');
 const {getTotalPage} = require('../utils');
 const client = twilio(accountSid, authToken);
 
@@ -20,7 +17,7 @@ const checkUser = async (req, res) => {
   try {
     const {phone} = req.body;
     const connection = await getConnection(req);
-    const user = await query(connection, UserSQL.getUserQuerySQL, [phone]);
+    const user = await query(connection, userSQL.getUserQuerySQL, [phone]);
     if (!isEmpty(user)) return res.status(409).json({message: 'Số điện thoại đã được sử dụng !'});
     return res.status(200).json({message: 'SĐT hợp lệ'});
   } catch (error) {
@@ -47,7 +44,7 @@ const register = async (req, res) => {
       active: 0,
       created_at: new Date(),
     };
-    await query(connection, UserSQL.insertUserSQL, newUser);
+    await query(connection, userSQL.insertuserSQL, newUser);
     return res.status(200).json({message: 'Đăng Ký Thành Công!'});
   } catch (e) {
     return res.status(500).json({message: `${e}`});
@@ -61,7 +58,7 @@ const postInsertUser = async (req, res) => {
   try {
     const data = req.body;
     const connection = await getConnection(req);
-    const user = await query(connection, UserSQL.getUserQuerySQL, [data.phone]);
+    const user = await query(connection, userSQL.getUserQuerySQL, [data.phone]);
     const lengthListUser = (await query(connection, userSQL.getLengthListUser)).length;
     console.log(lengthListUser);
     const id = 'User' + (lengthListProduct + 1);
@@ -84,7 +81,7 @@ const postInsertUser = async (req, res) => {
       active: 0,
       created_at: new Date(),
     };
-    await query(connection, UserSQL.insertUserSQL, newUser);
+    await query(connection, userSQL.insertuserSQL, newUser);
     const listUser = await query(connection, userSQL.queryAllUser);
     res.render('user', {listUser: listUser});
   } catch (e) {
@@ -97,9 +94,9 @@ const login = async (req, res) => {
     const {phone, password} = req.body;
 
     const connection = await getConnection(req);
-    const userBlock = await query(connection, UserSQL.getUserBlockQuerySQL, [phone]);
+    const userBlock = await query(connection, userSQL.getUserBlockQuerySQL, [phone]);
     if (isEmpty(userBlock)) {
-      const user = await query(connection, UserSQL.getUserQuerySQL, [phone]);
+      const user = await query(connection, userSQL.getUserQuerySQL, [phone]);
       if (isEmpty(user)) {
         return res.status(404).json({message: 'Số điện thoại chưa được đăng ký'});
       } else {
@@ -120,12 +117,12 @@ const recoveryPassword = async (req, res) => {
     const {password, phone} = req.body;
     console.log(`Recovery password`, password, phone);
     const connection = await getConnection(req);
-    const user = await query(connection, UserSQL.getUserQuerySQL, [phone]);
+    const user = await query(connection, userSQL.getUserQuerySQL, [phone]);
     if (isEmpty(user)) {
       return res.status(404).json({message: 'Số điện thoại chưa được đăng ký'});
     } else {
       const newPassword = await encodePassword(password);
-      await query(connection, UserSQL.updatePasswordUserSQL, [newPassword, phone]);
+      await query(connection, userSQL.updatePassworduserSQL, [newPassword, phone]);
       return res.status(200).json({message: 'Đổi mật khẩu thành công'});
     }
   } catch (e) {
@@ -145,9 +142,9 @@ const update = async (req, res) => {
       newDateOfBirth = `${date[2]}-${date[1]}-${date[0]}`;
     }
     const connection = await getConnection(req);
-    const user = await query(connection, UserSQL.getUserById, [user_id]);
+    const user = await query(connection, userSQL.getUserById, [user_id]);
     if (isEmpty(user)) return res.status(404).json({message: 'Không tìm thấy User'});
-    await query(connection, UserSQL.updateUserSQL, [
+    await query(connection, userSQL.updateuserSQL, [
       user_name || user[0].user_name || null,
       gender || user[0].gender,
       newDateOfBirth || user[0].date_of_birth,
@@ -173,8 +170,8 @@ const detail = async (req, res) => {
     if (isEmpty(user)) {
       return res.status(404).json({message: 'User not found'});
     }
-    if (user.date_of_birth) {
-      user.date_of_birth = moment(user.date_of_birth).format('DD-MM-YYYY');
+    if (user[0].date_of_birth) {
+      user[0].date_of_birth = moment(user[0].date_of_birth).format('DD-MM-YYYY');
     }
     return res.status(200).json({data: user[0]});
   } catch (e) {
@@ -182,9 +179,10 @@ const detail = async (req, res) => {
   }
 };
 const userDetail = async (req, res) => {
-  const user_id = req.params.id;
+  const user_id = req.query.user_id;
+  console.log(user_id);
   const connection = await getConnection(req);
-  detailUserQuery = 'select *  from user where  user_id=?';
+  detailUserQuery = 'SELECT * FROM user WHERE user_id=?';
   queryDonDaDat = `SELECT COUNT(bill_id) AS soDon FROM bill WHERE (status="Đang Giao" OR status="Hoàn Thành" OR status="Chờ Xác Nhận") AND user_id=?`;
   queryDonDaHuy = `SELECT COUNT(bill_id) AS soDon FROM bill WHERE (status="Đã Hủy" OR status="Đã Hoàn") AND user_id=?`;
   queryDoanhThu = `SELECT SUM(total_price) AS doanhThu FROM bill WHERE status="Hoàn Thành" AND user_id=?`;
@@ -192,7 +190,7 @@ const userDetail = async (req, res) => {
   const donDaHuy = await query(connection, queryDonDaHuy, [user_id]);
   const doanhThu = await query(connection, queryDoanhThu, [user_id]);
   const user = await query(connection, detailUserQuery, [user_id]);
-  if (user[0].date_of_birth) {
+  if (user[0]?.date_of_birth) {
     user[0].date_of_birth = moment(user[0].date_of_birth).format('DD-MM-YYYY');
   }
   if (user[0].created_at) {
@@ -288,7 +286,7 @@ const getAddress = async (req, res) => {
   try {
     const user_id = req.params.id;
     const connection = await getConnection(req);
-    const user = await query(connection, UserSQL.getUserById, [user_id]);
+    const user = await query(connection, userSQL.getUserById, [user_id]);
     const address = await query(connection, userSQL.getAddressUserById, [user_id]);
     if (isEmpty(user)) return res.status(404).json({message: 'User not found'});
     if (isEmpty(address[0]?.address)) return res.status(406).json({message: 'Address not found'});
@@ -302,10 +300,10 @@ const updateAddress = async (req, res) => {
   try {
     const {user_id, address} = req.body;
     const connection = await getConnection(req);
-    const user = await query(connection, UserSQL.getUserById, [user_id]);
+    const user = await query(connection, userSQL.getUserById, [user_id]);
     if (isEmpty(user)) return res.status(404).json({message: 'User not found'});
 
-    await query(connection, UserSQL.updateAddressUser, [address, user_id]);
+    await query(connection, userSQL.updateAddressUser, [address, user_id]);
     return res.status(200).json({message: 'success'});
   } catch (error) {
     return res.json({message: `${error}`});
@@ -315,7 +313,7 @@ const updateAddress = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     const connection = await getConnection(req);
-    const listUser = await query(connection, UserSQL.queryAllUser);
+    const listUser = await query(connection, userSQL.queryAllUser);
     return res.status(200).json({message: 'success', listUser: listUser});
   } catch (error) {
     return res.json({message: `${error}`});
@@ -411,7 +409,14 @@ const getAll = async (req, res) => {
     queryLimitUser = `SELECT * FROM user LIMIT 2  OFFSET  ${offset}`;
     const listUserLimit = await query(connection, queryLimitUser);
     const listUser = await query(connection, userSQL.queryAllUser);
-    res.render('user', {listUser: listUserLimit, totalPage: getTotalPage(listUser.length, 2)});
+    var totalPage = getTotalPage(listUser.length, 2);
+    var listPage = [];
+    var i = 1;
+    while (i <= totalPage) {
+      listPage.push(i);
+      i++;
+    }
+    res.render('user', {listUser: listUserLimit, listPage: listPage, pageNumber: pageNumber});
   } else {
     pageNumber = 1;
     var offset = 0;
@@ -424,7 +429,14 @@ const getAll = async (req, res) => {
     queryLimitUser = `SELECT * FROM user LIMIT 2  OFFSET  ${offset}`;
     const listUserLimit = await query(connection, queryLimitUser);
     const listUser = await query(connection, userSQL.queryAllUser);
-    res.render('user', {listUser: listUserLimit, totalPage: getTotalPage(listUser.length, 2)});
+    var totalPage = getTotalPage(listUser.length, 2);
+    var listPage = [];
+    var i = 1;
+    while (i <= totalPage) {
+      listPage.push(i);
+      i++;
+    }
+    res.render('user', {listUser: listUserLimit, listPage: listPage, pageNumber: pageNumber});
   }
 };
 const getAllAdmin = async (req, res) => {

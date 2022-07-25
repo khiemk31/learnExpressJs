@@ -13,6 +13,10 @@ demo = {
     });
   },
 
+  getDate: function () {
+    document.getElementById('date').value = user.date_of_birth;
+  },
+
   initDocChart: function () {
     chartColor = '#FFFFFF';
 
@@ -96,27 +100,27 @@ demo = {
     });
   },
 
-  initChartsPages: function (ListDoanhThu) {
+  initChartsPages: function (strings) {
     chartColor = '#FFFFFF';
-    console.log(ListDoanhThu[0]);
+    console.log(strings);
     ctx = document.getElementById('chartHours').getContext('2d');
-    console.log('DDDDDDDDDDD', string1);
-    var xValues = ListDoanhThu.month;
-    var yValues = ListDoanhThu.DanhThu;
-    var barColors = ['#ff0000', '#ff8000', '#ffff00', '#80ff00', '#00ff00', '#00ff80', '#00ffff', '#0080ff', '#0000ff', '#8000ff', '#ff00ff', '#ff0080'];
 
-    myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: xValues,
-        datasets: [
-          {
-            backgroundColor: barColors,
-            data: yValues,
-          },
-        ],
-      },
-    });
+    // var xValues = ListDoanhThu.month;
+    // var yValues = ListDoanhThu.DanhThu;
+    // var barColors = ['#ff0000', '#ff8000', '#ffff00', '#80ff00', '#00ff00', '#00ff80', '#00ffff', '#0080ff', '#0000ff', '#8000ff', '#ff00ff', '#ff0080'];
+
+    // myChart = new Chart(ctx, {
+    //   type: 'bar',
+    //   data: {
+    //     labels: xValues,
+    //     datasets: [
+    //       {
+    //         backgroundColor: barColors,
+    //         data: yValues,
+    //       },
+    //     ],
+    //   },
+    // });
 
     ctx = document.getElementById('chartEmail').getContext('2d');
 

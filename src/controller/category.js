@@ -73,16 +73,17 @@ const category = async (req, res) => {
   const connection = await getConnection(req);
   const listCategory = await query(connection, categorySQL.listCategoryQuerySQL);
   for (const category of listCategory) {
-    if (category.created_at != null) {
+    if (category.created_at) {
       category.created_at = moment(category.created_at).format('DD-MM-YYYY');
     }
-    if (category.updated_at != null) {
+    if (category.updated_at) {
       category.updated_at = moment(category.updated_at).format('DD-MM-YYYY');
     }
-    if (category.deleted_at != null) {
+    if (category.deleted_at) {
       category.deleted_at = moment(category.deleted_at).format('DD-MM-YYYY');
     }
   }
+
   res.render('category', {listCategory: listCategory});
 };
 //Xóa thể loại

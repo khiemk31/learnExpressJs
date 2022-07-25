@@ -22,42 +22,41 @@ head
             a.simple-text.logo-mini(href='/main')
                 .logo-image-small
                     img(src="https://res.cloudinary.com/cde/image/upload/v1658206315/Icon/logo_cdrkpi.png")
-            a.simple-text.logo-normal(href='/main')
-                | Model Fashion
+            a.simple-text.logo-normal(href='/main') Model Fashion
         .sidebar-wrapper
             ul.nav
                 li.active
                     a(href='/main')
-                        i.nc-icon.nc-chart-bar-32
+                        i.nc-icon.nc-chart-pie-36
                         p Dashboard
                 li
-                    a(href='./user')
-                        i.nc-icon.nc-diamond
+                    a(href='/user')
+                        i.nc-icon.nc-circle-10
                         p User
                 li
-                    a(href='./map.html')
-                        i.nc-icon.nc-pin-3
-                        p Maps
+                    a(href='#')
+                        i.nc-icon.nc-bullet-list-67
+                        p Category
                 li
-                    a(href='./notifications.html')
-                        i.nc-icon.nc-bell-55
-                        p Notifications
+                    a(href='#')
+                        i.nc-icon.nc-align-left-2
+                        p Product
                 li
-                    a(href='./user.html')
+                    a(href='#')
+                        i.nc-icon.nc-money-coins
+                        p Voucher
+                li
+                    a(href='#')
+                        i.nc-icon.nc-delivery-fast
+                        p Bill
+                li
+                    a(href='/profile')
                         i.nc-icon.nc-single-02
-                        p User Profile
-                li
-                    a(href='./tables.html')
-                        i.nc-icon.nc-tile-56
-                        p Table List
-                li
-                    a(href='./typography.html')
-                        i.nc-icon.nc-caps-small
-                        p Typography
+                        p Profile
                 li.active-pro
-                    a(href='./upgrade.html')
-                        i.nc-icon.nc-spaceship
-                        p Upgrade to PRO
+                    a(href='#')
+                        i.nc-icon.nc-user-run
+                        p Log Out
     .main-panel
         // Navbar
         nav.navbar.navbar-expand-lg.navbar-absolute.fixed-top.navbar-transparent
@@ -228,5 +227,5 @@ script.
     $(document).ready(function() {
         $()
     // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
-    demo.initChartsPages(ListDoanhThu);
+    demo.initChartsPages("testdsfsdfasdf");
     });

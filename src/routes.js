@@ -4,6 +4,7 @@ const product = require('./controller/product');
 const bill = require('./controller/bill');
 const view = require('./controller/main');
 const middleware = require('../src/utils/middleware/authenToken.middleware');
+const profile = require('./controller/profile');
 
 module.exports = (router) => {
   //Main Router
@@ -40,7 +41,6 @@ module.exports = (router) => {
   router.get('/product/remove/:id', middleware.requireAuth, product.removeProduct);
   //User API
   router.get('/user/getuser', user.getUser);
-  router.get('/user/userDetail/:id', user.userDetail);
   router.post('/user/searchUser', user.searchUser);
   router.get('/user/insertUser', user.getInsertUser);
   router.post('/user/insertUser', user.postInsertUser);
@@ -60,6 +60,7 @@ module.exports = (router) => {
   router.get('/getAllUser', middleware.requireAuth, user.getAllUserTest);
   router.get('/login', user.loginWeb);
   router.post('/login', user.loginAdmin);
+  router.get('/user/userDetail', middleware.requireAuth, user.userDetail);
   router.get('/user', middleware.requireAuth, user.getAll);
   router.get('/getUser', middleware.requireAuth, user.getAllUser);
   router.get('/getAllAdmin', middleware.requireAuth, user.getAllAdmin);
@@ -87,4 +88,8 @@ module.exports = (router) => {
   router.get('/bill/billCancel/:id', middleware.requireAuth, bill.billCancel);
   router.get('/bill/billCancelDone/:id', middleware.requireAuth, bill.billCancelDone);
   router.get('/bill/refuseToCancelBill/:id', middleware.requireAuth, bill.refuseToCancelBill);
+  //Web Profile
+  router.get('/profile', profile.profile);
+  router.get('/profile/edit', profile.edit);
+  router.post('/profile/update', profile.update);
 };

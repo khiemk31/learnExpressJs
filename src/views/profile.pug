@@ -28,35 +28,35 @@ head
             ul.nav
                 li
                     a(href='/main')
-                        i.nc-icon.nc-chart-bar-32
+                        i.nc-icon.nc-chart-pie-36
                         p Dashboard
-                li.active
+                li
                     a(href='/user')
-                        i.nc-icon.nc-diamond
+                        i.nc-icon.nc-circle-10
                         p User
                 li
                     a(href='#')
-                        i.nc-icon.nc-pin-3
+                        i.nc-icon.nc-bullet-list-67
                         p Category
                 li
                     a(href='#')
-                        i.nc-icon.nc-bell-55
+                        i.nc-icon.nc-align-left-2
                         p Product
                 li
                     a(href='#')
-                        i.nc-icon.nc-caps-small
+                        i.nc-icon.nc-money-coins
                         p Voucher
                 li
                     a(href='#')
-                        i.nc-icon.nc-tile-56
+                        i.nc-icon.nc-delivery-fast
                         p Bill
-                li
+                li.active
                     a(href='/profile')
                         i.nc-icon.nc-single-02
                         p Profile
                 li.active-pro
                     a(href='#')
-                        i.nc-icon.nc-spaceship
+                        i.nc-icon.nc-user-run
                         p Log Out
     .main-panel
         nav.navbar.navbar-expand-lg.navbar-absolute.fixed-top.navbar-transparent
@@ -77,12 +77,12 @@ head
                             img(src='https://res.cloudinary.com/cde/image/upload/v1658717372/my-photo/tai-hinh-anh-bien-dep-nhat-tren-the-gioi-lam-hinh-nen-4_ctr1gu.jpg' alt='...')
                         .card-body
                             .author
-                                a(href='/user/userDetail/?user_id=' + user.user_id method="GET")
+                                a(href='/profile'  )
                                     img.avatar.border-gray(src=user.avatar alt='...')
                                     h5.title= user.user_name
                                 p.title= "ID : "+user.user_id
-                            p.description.text-center Triết Lý các thứ các kiểu  bla bla bla...
-                            //- "Tôi có ông sinh năm 96 tự mày mò học code rồi đi làm remote cho công ty Mỹ Đình 2 năm nay.
+                            p.description.text-center 
+                                |"Tôi có ông sinh năm 96 tự mày mò học code rồi đi làm remote cho công ty Mỹ Đình 2 năm nay.
                                 | Mỗi tối online 13-14 giờ là xong việc. Lương tháng 3 trẹo 6
                                 | Nhưng thu nhập chính vẫn là từ nhận các project bên ngoài làm thêm.
                                 | Tuần làm 2,3 cái lòi tr* 3,400k VNĐ tiền tươi thóc thật không phải đóng thuế. 
@@ -115,12 +115,15 @@ head
                         .card-header
                             h5.card-title  Profile Details
                         .card-body
-                            form
+                            form(action='/profile/update' method='post' enctype='multipart/form-data' role='form')
                                 .row
                                     .col-md-5.pr-1
                                         .form-group
                                             label Tên Người Dùng
-                                            input.form-control(type='text' disabled  value=user.user_name)
+                                            if(edit)
+                                                input.form-control(type='text' name='user_name'  value=user.user_name)
+                                            else
+                                                input.form-control(type='text'  disabled value=user.user_name)
                                     .col-md-3.px-1
                                         .form-group
                                             label Số Điện Thoại
@@ -128,21 +131,34 @@ head
                                     .col-md-2.pl-1
                                         .form-group
                                             label(for='exampleInputEmail1') Giới Tính
-                                            if(user.gender==2)
-                                                input.form-control(type='text' disabled value="Nữ")
-                                            else if (user.gender==1)
-                                                input.form-control(type='text' disabled value="Nam")
-                                            else
-                                                input.form-control(type='text' disabled value="Không Xác Định")
+                                            if(edit)
+                                                select#inputState.form-control(name='gender' ) Chọn Giới Tính
+                                                    option(value=1 name='gender'  ) Nam
+                                                    option(value=2 name='gender'  ) Nữ
+                                                    option(value=0 name='gender') Không Xác Định
+                                            else 
+                                                if(user.gender==2)
+                                                    input.form-control(type='text' disabled value="Nữ")
+                                                else if(user.gender==1)
+                                                    input.form-control(type='text' disabled value="Nam")
+                                                else
+                                                    input.form-control(type='text' disabled value="Không Xác Định")
                                 .row
                                     .col-md-6.pr-1
                                         .form-group
                                             label Ngày Sinh
-                                            input.form-control(type='text' disabled  value=user.date_of_birth)
+                                            if(edit)
+                                                input.form-control(type='date' name='date_of_birth'  value=user.date_of_birth)
+                                            else
+                                                input.form-control(type='text' disabled  value=user.date_of_birth)
                                     .col-md-6.pl-1
                                         .form-group
                                             label Địa Chỉ
-                                            input.form-control(type='text' disabled  value=user.address)
+                                            if(edit)
+                                                input.form-control(type='text' name='address'  value=user.address)
+                                            else
+                                                input.form-control(type='text'  disabled value=user.address)
+
                                 .row
                                     .col-md-6.pr-1
                                         .form-group
@@ -152,21 +168,28 @@ head
                                         .form-group
                                             label Tình Trạng
                                             if (user.active==0)
-                                                input.form-control(type='text' disabled  value="Đang Hoạt Động")
+                                                input.form-control(type='text' disabled value="Đang Hoạt Động")
                                             if (user.active==1)
-                                                input.form-control(type='text' disabled  value="Đã Bị Block")
+                                                input.form-control(type='text' disabled value="Đã Bị Block")
                                 .row
                                     .col-md-3.pr-1
                                         .form-group
                                             label Ngày Tạo Tài Khoản
-                                            input.form-control(type='text' disabled  value=user.created_at)
+                                            input.form-control(type='text' disabled value=user.created_at)
+                                    if(edit)            
+                                        .col-md-3.pr-1.align-self-center
+                                            .form-group
+                                                input#customFile.custom-file-input(type='file' name='avatar')
+                                                label.custom-file-label(for='customFile') Choose new Avatar
                                 .row
                                     .update.ml-auto.mr-auto
-                                        if(user.permission !="super admin")
-                                            if (user.active==0) 
-                                                a.btn.btn-danger(href='/user/remove/'+user.user_id role='button') Khóa Tài Khoản
-                                            if (user.active==1)
-                                                a.btn.btn-primary(href='/user/active/'+user.user_id role='button')  Mở Khóa
+                                        if (edit) 
+                                            button.btn.btn-primary(type='submit') Update Profile
+                                        else 
+                                            a.btn.btn-primary(href='/profile/edit/?edit='+true role='button' ) Edit Profile
+
+
+
 // Core JS Files
 script
     include ./assets/js/core/jquery.min.js
@@ -184,9 +207,3 @@ script
     include ./assets/js/paper-dashboard.min.js
 script
     include ./assets/demo/demo.js
-script 
-    include ./assets/js/plugins/bootstrap-notify.js
-// Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc
-script(src='../assets/js/paper-dashboard.min.js?v=2.0.1' type='text/javascript')
-// Paper Dashboard DEMO methods, don't include it in your project!
-script(src='../assets/demo/demo.js')
