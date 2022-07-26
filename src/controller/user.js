@@ -44,50 +44,13 @@ const register = async (req, res) => {
       active: 0,
       created_at: new Date(),
     };
-    await query(connection, userSQL.insertuserSQL, newUser);
+    await query(connection, userSQL.insertUserSQL, newUser);
     return res.status(200).json({message: 'Đăng Ký Thành Công!'});
   } catch (e) {
     return res.status(500).json({message: `${e}`});
   }
 };
 
-const getInsertUser = async (req, res) => {
-  res.render('insertAdmin');
-};
-const postInsertUser = async (req, res) => {
-  try {
-    const data = req.body;
-    const connection = await getConnection(req);
-    const user = await query(connection, userSQL.getUserQuerySQL, [data.phone]);
-    const lengthListUser = (await query(connection, userSQL.getLengthListUser)).length;
-    console.log(lengthListUser);
-    const id = 'User' + (lengthListProduct + 1);
-    if (!isEmpty(user)) return res.status(409).json({message: 'Số điện thoại đã được sử dụng !'});
-    if (req.files.avatar.data) {
-      var avatar = 'data:image/jpeg;base64,' + req.files.avatar.data.toString('base64');
-      const upload = await uploadImage(avatar);
-      avatar = upload.url;
-    }
-    const newPassword = await encodePassword(data.password);
-    const newUser = {
-      user_id: id,
-      phone: data.phone,
-      password: newPassword,
-      user_name: data.user_name,
-      gender: data.gender,
-      address: data.address,
-      permission: data.permission,
-      avatar: avatar,
-      active: 0,
-      created_at: new Date(),
-    };
-    await query(connection, userSQL.insertuserSQL, newUser);
-    const listUser = await query(connection, userSQL.queryAllUser);
-    res.render('user', {listUser: listUser});
-  } catch (e) {
-    return res.status(500).json({message: `${e}`});
-  }
-};
 //API loginUser
 const login = async (req, res) => {
   try {
@@ -122,7 +85,7 @@ const recoveryPassword = async (req, res) => {
       return res.status(404).json({message: 'Số điện thoại chưa được đăng ký'});
     } else {
       const newPassword = await encodePassword(password);
-      await query(connection, userSQL.updatePassworduserSQL, [newPassword, phone]);
+      await query(connection, userSQL.updatePasswordUserSQL, [newPassword, phone]);
       return res.status(200).json({message: 'Đổi mật khẩu thành công'});
     }
   } catch (e) {
@@ -144,7 +107,7 @@ const update = async (req, res) => {
     const connection = await getConnection(req);
     const user = await query(connection, userSQL.getUserById, [user_id]);
     if (isEmpty(user)) return res.status(404).json({message: 'Không tìm thấy User'});
-    await query(connection, userSQL.updateuserSQL, [
+    await query(connection, userSQL.updateUserSQL, [
       user_name || user[0].user_name || null,
       gender || user[0].gender,
       newDateOfBirth || user[0].date_of_birth,
@@ -320,15 +283,101 @@ const getUser = async (req, res) => {
   }
 };
 //WEB VIEW
-//User
-// getView
-
+const getAll = async (req, res) => {
+  var {pageNumber} = req.query;
+  const connection = await getConnection(req);
+  if (pageNumber) {
+    var offset = 0;
+    if (pageNumber == 1) {
+      offset = 0;
+    } else if (pageNumber > 1) {
+      offset = (pageNumber - 1) * 10;
+    }
+    queryLimitUser = `SELECT * FROM user LIMIT 10  OFFSET  ${offset}`;
+    const listUserLimit = await query(connection, queryLimitUser);
+    const listUser = await query(connection, userSQL.queryAllUser);
+    var totalPage = getTotalPage(listUser.length, 10);
+    var listPage = [];
+    var i = 1;
+    while (i <= totalPage) {
+      listPage.push(i);
+      i++;
+    }
+    res.render('user', {listUser: listUserLimit, listPage: listPage, pageNumber: pageNumber});
+  } else {
+    pageNumber = 1;
+    var offset = 0;
+    if (pageNumber == 1) {
+      offset = 0;
+    } else if (pageNumber > 1) {
+      offset = (pageNumber - 1) * 10;
+    }
+    queryLimitUser = `SELECT * FROM user LIMIT 10  OFFSET  ${offset}`;
+    const listUserLimit = await query(connection, queryLimitUser);
+    const listUser = await query(connection, userSQL.queryAllUser);
+    var totalPage = getTotalPage(listUser.length, 10);
+    var listPage = [];
+    var i = 1;
+    while (i <= totalPage) {
+      listPage.push(i);
+      i++;
+    }
+    res.render('user', {listUser: listUserLimit, listPage: listPage, pageNumber: pageNumber});
+  }
+};
 const loginWeb = async (req, res) => {
   res.render('login');
 };
-// postData
+const getInsertUser = async (req, res) => {
+  res.render('insert_user');
+};
+const postInsertUser = async (req, res) => {
+  try {
+    const data = req.body;
+    console.log(data);
+    const connection = await getConnection(req);
+    const user = await query(connection, userSQL.getUserQuerySQL, [data.phone]);
+    const lengthListUser = (await query(connection, userSQL.getLengthListUser)).length;
+    console.log(lengthListUser);
+    const id = 'USER' + (lengthListUser + 1);
+    if (!isEmpty(user)) return res.status(409).json({message: 'Số điện thoại đã được sử dụng !'});
+    if (req.files.avatar.data) {
+      var avatar = 'data:image/jpeg;base64,' + req.files.avatar.data.toString('base64');
+      const upload = await uploadImage(avatar);
+      avatar = upload.url;
+    }
+    const newPassword = await encodePassword(data.password);
+    const newUser = {
+      user_id: id,
+      phone: data.phone,
+      password: newPassword,
+      user_name: data.user_name,
+      gender: data.gender,
+      address: data.address,
+      permission: data.permission,
+      date_of_birth: data.date_of_birth,
+      avatar: avatar,
+      active: 0,
+      created_at: new Date(),
+    };
+    await query(connection, userSQL.insertUserSQL, newUser);
+    //load phân trang:
+    queryLimitUser = `SELECT * FROM user LIMIT 10  OFFSET  0`;
+    const listUserLimit = await query(connection, queryLimitUser);
+    const listUser = await query(connection, userSQL.queryAllUser);
+    var totalPage = getTotalPage(listUser.length, 10);
+    var listPage = [];
+    var i = 1;
+    while (i <= totalPage) {
+      listPage.push(i);
+      i++;
+    }
+    res.render('user', {listUser: listUserLimit, listPage: listPage, pageNumber: 1});
+  } catch (e) {
+    return res.status(500).json({message: `${e}`});
+  }
+};
 //WEB loginAdmin
-
 const loginAdmin = async (req, res) => {
   try {
     const data = req.body;
@@ -389,27 +438,19 @@ const loginAdmin = async (req, res) => {
 };
 
 const getAllUser = async (req, res) => {
-  const connection = await getConnection(req);
-  const listUser = await query(connection, userSQL.queryListUser);
-
-  res.render('user', {listUser: listUser});
-};
-
-const getAll = async (req, res) => {
   var {pageNumber} = req.query;
-  console.log('data có đc truyền chưa xử lý đúng' + pageNumber);
   const connection = await getConnection(req);
   if (pageNumber) {
     var offset = 0;
     if (pageNumber == 1) {
       offset = 0;
     } else if (pageNumber > 1) {
-      offset = (pageNumber - 1) * 2;
+      offset = (pageNumber - 1) * 10;
     }
-    queryLimitUser = `SELECT * FROM user LIMIT 2  OFFSET  ${offset}`;
+    queryLimitUser = `SELECT * FROM user WHERE deleted_at is null AND permission='user' LIMIT 10  OFFSET  ${offset}`;
     const listUserLimit = await query(connection, queryLimitUser);
-    const listUser = await query(connection, userSQL.queryAllUser);
-    var totalPage = getTotalPage(listUser.length, 2);
+    const listUser = await query(connection, userSQL.queryListUser);
+    var totalPage = getTotalPage(listUser.length, 10);
     var listPage = [];
     var i = 1;
     while (i <= totalPage) {
@@ -423,13 +464,12 @@ const getAll = async (req, res) => {
     if (pageNumber == 1) {
       offset = 0;
     } else if (pageNumber > 1) {
-      offset = (pageNumber - 1) * 2;
+      offset = (pageNumber - 1) * 10;
     }
-
-    queryLimitUser = `SELECT * FROM user LIMIT 2  OFFSET  ${offset}`;
+    queryLimitUser = `SELECT * FROM user WHERE deleted_at is null AND permission='user' LIMIT 10  OFFSET  ${offset}`;
     const listUserLimit = await query(connection, queryLimitUser);
-    const listUser = await query(connection, userSQL.queryAllUser);
-    var totalPage = getTotalPage(listUser.length, 2);
+    const listUser = await query(connection, userSQL.queryListUser);
+    var totalPage = getTotalPage(listUser.length, 10);
     var listPage = [];
     var i = 1;
     while (i <= totalPage) {
@@ -439,21 +479,11 @@ const getAll = async (req, res) => {
     res.render('user', {listUser: listUserLimit, listPage: listPage, pageNumber: pageNumber});
   }
 };
+
 const getAllAdmin = async (req, res) => {
   const connection = await getConnection(req);
   const listAdmin = await query(connection, userSQL.queryListAdmin);
   res.render('user', {listUser: listAdmin});
-};
-const getAllUserTest = async (req, res) => {
-  try {
-    // const {user_id} = req.body;
-    const connection = await getConnection(req);
-    const listUser = await query(connection, userSQL.queryAllUser);
-    console.log(listUser);
-    return res.status(200).json({listUser: listUser});
-  } catch (e) {
-    return res.status(500).json({message: `${e}`});
-  }
 };
 
 const getSupperAdmin = async (req, res) => {
@@ -470,7 +500,6 @@ const getUserBlock = async (req, res) => {
 
 module.exports = {
   getUser,
-  getAllUserTest,
   getInsertUser,
   postInsertUser,
   searchUser,

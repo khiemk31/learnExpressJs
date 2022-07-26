@@ -41,11 +41,6 @@ module.exports = (router) => {
   router.get('/product/remove/:id', middleware.requireAuth, product.removeProduct);
   //User API
   router.get('/user/getuser', user.getUser);
-  router.post('/user/searchUser', user.searchUser);
-  router.get('/user/insertUser', user.getInsertUser);
-  router.post('/user/insertUser', user.postInsertUser);
-  router.get('/user/remove/:id', user.blockUser);
-  router.get('/user/active/:id', user.activeUser);
   router.post('/user/checkUser', user.checkUser);
   router.get('/user/getAddress/:id', user.getAddress);
   router.put('/user/updateAddress', user.updateAddress);
@@ -57,7 +52,11 @@ module.exports = (router) => {
   router.post('/user/send-otp', user.apiSendOTP);
   router.post('/user/verify-otp', user.verifyOTP);
   //User Web View
-  router.get('/getAllUser', middleware.requireAuth, user.getAllUserTest);
+  router.post('/user/searchUser', middleware.requireAuth, user.searchUser);
+  router.get('/user/insertUser', middleware.requireAuth, user.getInsertUser);
+  router.post('/user/insertUser', middleware.requireAuth, user.postInsertUser);
+  router.get('/user/remove/:id', middleware.requireAuth, user.blockUser);
+  router.get('/user/active/:id', middleware.requireAuth, user.activeUser);
   router.get('/login', user.loginWeb);
   router.post('/login', user.loginAdmin);
   router.get('/user/userDetail', middleware.requireAuth, user.userDetail);

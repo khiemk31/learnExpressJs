@@ -30,11 +30,11 @@ head
                     a(href='/main')
                         i.nc-icon.nc-chart-pie-36
                         p Dashboard
-                li
+                li.active
                     a(href='/user')
                         i.nc-icon.nc-circle-10
                         p User
-                li.active
+                li
                     a(href='/category')
                         i.nc-icon.nc-bullet-list-67
                         p Category
@@ -62,29 +62,63 @@ head
         nav.navbar.navbar-expand-lg.navbar-absolute.fixed-top.navbar-transparent
             .container-fluid
                 .navbar-wrapper
-                    a.navbar-brand(href='#') Thể loại
+                    a.navbar-brand(href='#') Tạo tài khoản
         .content.d-flex.justify-content-center
             .col-md-5
                 .card.card-user
                     .card-header
-                        h5.card-title  Tạo thể loại mới
+                        h5.card-title  Nhập thông tin tài khoản
                     .card-body
-                        form.was-validated(action='/addCategory' method='POST' enctype='multipart/form-data' role='form')
+                        form.was-validated(action='/user/insertUser' method='POST' enctype='multipart/form-data' role='form')
                             .row
                                 .col-md-10.pr-1
                                     .form-group
-                                        label Tên thể loại
-                                        input.form-control(type='text' name='category_name' required='')
+                                        label Tên Người Dùng
+                                        input.form-control(type='text' name='user_name' required='')
+                            .row
+                                .col-md-10.pr-1
+                                    .form-group
+                                        label Số Điện Thoại
+                                        input.form-control(type='phone' name='phone' required='')
+                            .row
+                                .col-md-5.pr-1
+                                    .form-group
+                                        label(for='exampleInputEmail1') Giới Tính
+                                        select#inputState.form-control(name='gender' required='') Chọn Giới Tính
+                                            option(value=1 name='gender'  ) Nam
+                                            option(value=2 name='gender'  ) Nữ
+                                            option(value=0 name='gender') Không Xác Định
+                                .col-md-5.pr-1
+                                    .form-group
+                                        label Loại Tài Khoản
+                                        select#inputState.form-control(name='permission' required='' ) Chọn loại tài khoản
+                                            option(value="user" name='permission'  ) Khách Hàng
+                                            option(value='admin' name='permission'  ) Admin
+                            .row    
+                                .col-md-10.pr-1
+                                    .form-group
+                                        label Ngày Sinh
+                                        input.form-control(type='date' name='date_of_birth' required='' )
+                            .row
+                                .col-md-10.pr-1
+                                    .form-group
+                                        label Địa Chỉ
+                                        input.form-control(type='text' name='address' required=''  )
+                            .row
+                                .col-md-10.pr-1
+                                    .form-group
+                                        label Mật khẩu
+                                        input.form-control(type='password' name='password' required='')
                             .row    
                                 .col-md-5.pr-1.pb-3.align-self-center
                                     .form-group
-                                        label Ảnh minh họa
+                                        label Avatar
                                     .flex.justify-between.mb-6
                                         .flex
                                             input#fileToUpload1(type='file' name='avatar' required='')
                             .row
                                 .update.ml-auto.mr-auto
-                                    button.btn.btn-primary(type='submit' value='Tạo thể loại' name='submit') Tạo thể loại
+                                    button.btn.btn-primary(type='submit' value='Tạo tài khoản' name='submit') Tạo tài khoản
 
 script
     include ./assets/js/core/jquery.min.js

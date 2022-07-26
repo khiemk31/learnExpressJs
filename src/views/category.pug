@@ -30,16 +30,16 @@ head
                     a(href='/main')
                         i.nc-icon.nc-chart-pie-36
                         p Dashboard
-                li.active
+                li
                     a(href='/user')
                         i.nc-icon.nc-circle-10
                         p User
-                li
-                    a(href='#')
+                li.active
+                    a(href='/category')
                         i.nc-icon.nc-bullet-list-67
                         p Category
                 li
-                    a(href='#')
+                    a(href='/product')
                         i.nc-icon.nc-align-left-2
                         p Product
                 li
@@ -47,7 +47,7 @@ head
                         i.nc-icon.nc-money-coins
                         p Voucher
                 li
-                    a(href='#')
+                    a(href='/bill')
                         i.nc-icon.nc-delivery-fast
                         p Bill
                 li
@@ -63,30 +63,30 @@ head
             .container-fluid
                 .navbar-wrapper
                     a.navbar-brand(href='#') Quản Lý Thể Loại
-                #navigation.collapse.navbar-collapse.justify-content-end
-                    a.btn.btn-primary.justify-content-center(href='#' role='button') Tạo Tài Khoản
-                    form.ml-2
-                        .input-group.no-border
-                            input.form-control(type='text' value='' placeholder='Search...')
-                            .input-group-append
-                                .input-group-text
-                                    i.nc-icon.nc-zoom-split
-                    ul.navbar-nav
-                        li.nav-item.btn-rotate.dropdown
-                            a#navbarDropdownMenuLink.nav-link.dropdown-toggle(href='#' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
-                                i.nc-icon.nc-tile-56
-                            .dropdown-menu.dropdown-menu-right(aria-labelledby='navbarDropdownMenuLink')
-                                a.dropdown-item(href='#') Tất cả tài khoản
-                                a.dropdown-item(href='#') Tài khoản Admin
-                                a.dropdown-item(href='#') Tài khoản khách hàng
-                                a.dropdown-item(href='#') Tài khoản bị khóa
         .content
+            .col-md-6
+                form.ml-2.mb-2.align-self-center
+                    .input-group.no-border
+                        input#myInput.form-control(onkeyup='searchCategory()' type='text' name='search' placeholder='Search...')
+                        .input-group-append
+                            .input-group-text
+                                i.nc-icon.nc-zoom-split
+                a.btn.btn-primary.align-self-center(href='/insertCategory' role='button')  Thêm thể loại
+            .col-md-6
+                form.md-3.mb-2.align-self-center
+                    .row
+                        .col-md-3
+                            input.form-control(type='date' name='date1'  )
+                        .col-md-3
+                            input.form-control(type='date' name='date2'  )
+                    .update.ml-auto.mr-auto
+                        button.btn.btn-primary(type='submit' value='Lọc' name='submit') Lọc
             .row
                 .col-md-12
                     .card
                         .card-body
                             .table-responsive   
-                                table.table
+                                table#myTable
                                     thead.text-primary
                                         th Tên thể loại
                                         th Ảnh minh họa
@@ -106,21 +106,30 @@ head
                                                 td= category.deleted_at
                                                 td  
                                                     .btn-group
-                                                        button.btn.btn-danger(type='button') Chức Năng
-                                                        button.btn.btn-danger.dropdown-toggle.dropdown-toggle-split(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+                                                        button.btn.btn-info(type='button') Chức Năng
+                                                        button.btn.btn-info.dropdown-toggle.dropdown-toggle-split(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
                                                             span.sr-only Toggle Dropdown
-                                                            .dropdown-menu.dropdown-menu-right(aria-labelledby='navbarDropdownMenuLink')
-                                                                a.dropdown-item(href='#') Sửa thể loại
-                                                                a.dropdown-item(href='#') Xóa thể loại
-        //- .dropdown.show.d-inline-block.widget-dropdown
-        //-     a#dropdown-recent-order1.dropdown-toggle.icon-burger-mini(href='' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' data-display='static')
-        //-     ul.dropdown-menu.dropdown-menu-right(aria-labelledby='dropdown-recent-order1')
-        //-         a(href='/category/getUpdateCategory/'+category.category_id )
-        //-             li.dropdown-item
-        //-                 | Sửa Thể Loại
-        //-         a(href='/category/remove/'+category.category_id   )
-        //-             li.dropdown-item
-        //-                 | Xóa Thể Loại
+                                                        .dropdown-menu
+                                                            a.dropdown-item(href='#') Sửa thể loại
+                                                            a.dropdown-item(href='#') Xóa thể loại
+                            //- nav.d-flex.justify-content-end(aria-label='...')
+                            //-     ul.pagination
+                            //-         li.page-item
+                            //-             -var number1=parseInt(pageNumber)-1
+                            //-             if(number1>0)
+                            //-                 a.page-link(href='/user/?pageNumber='+number1 ) Previous
+                            //-         each page,index in listCategory
+                            //-             if(page==pageNumber)
+                            //-                 li.page-item.active
+                            //-                     a.page-link(href='/user/?pageNumber='+page)=page
+                            //-                     span.sr-only (current)
+                            //-             else 
+                            //-                 li.page-item
+                            //-                     a.page-link(href='/user/?pageNumber='+page)= page
+                            //-         li.page-item
+                            //-             -var number2= parseInt(pageNumber)+1
+                            //-             if(number2 <= listPage.length)
+                            //-                 a.page-link(href='/user/?pageNumber='+number2) Next      
 // Core JS Files
 script
     include ./assets/js/core/jquery.min.js

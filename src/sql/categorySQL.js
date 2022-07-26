@@ -4,7 +4,7 @@ module.exports = {
   categoryQueryByIdSQL: `select * from category where  deleted_at is null and category_id=?`,
   insertCategorySQL: `insert into category set ?`,
   updateCategorySQL: `update category set ? where category_id=?`,
-  listCategoryQuerySQL: `SELECT category_id , category_name ,category_image FROM category WHERE deleted_at is null`,
+  listCategoryQuerySQL: `SELECT * FROM category WHERE deleted_at is null`,
   listCategoryDeleted: `SELECT * FROM category WHERE deleted_at is not null`,
   listCategoryUpdated: `SELECT * FROM category WHERE updated_at is not null`,
   listCategoryCreated: `SELECT * FROM category WHERE deleted_at is null ORDER BY created_at DESC`,

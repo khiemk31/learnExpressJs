@@ -56,14 +56,13 @@ const update = async (req, res) => {
   try {
     const user_id = jwt.verify(req.cookies.token, process.env.ACCESS_TOKEN_SECRET).user_id;
     let data = req.body;
-    // let newDateOfBirth = null;
     let newAvatar = null;
     // if (data.date_of_birth) {
     //   const date = data.date_of_birth.split('-');
     //   newDateOfBirth = `${date[2]}-${date[1]}-${date[0]}`;
     // }
 
-    if (req.files.avatar.data) {
+    if (req.files?.avatar.data) {
       var avatar = 'data:image/jpeg;base64,' + req.files.avatar.data.toString('base64');
       const upload = await uploadImage(avatar);
       newAvatar = upload.url;

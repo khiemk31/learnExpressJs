@@ -35,11 +35,11 @@ head
                         i.nc-icon.nc-circle-10
                         p User
                 li
-                    a(href='#')
+                    a(href='/category')
                         i.nc-icon.nc-bullet-list-67
                         p Category
                 li
-                    a(href='#')
+                    a(href='/product')
                         i.nc-icon.nc-align-left-2
                         p Product
                 li
@@ -47,7 +47,7 @@ head
                         i.nc-icon.nc-money-coins
                         p Voucher
                 li
-                    a(href='#')
+                    a(href='/bill')
                         i.nc-icon.nc-delivery-fast
                         p Bill
                 li
@@ -63,33 +63,34 @@ head
             .container-fluid
                 .navbar-wrapper
                     a.navbar-brand(href='#') Quản Lý Tài Khoản
-                #navigation.collapse.navbar-collapse.justify-content-end
-                    a.btn.btn-primary.justify-content-center(href='#' role='button') Tạo Tài Khoản
-                    form.ml-2
-                        .input-group.no-border
-                            input.form-control(type='text' value='' placeholder='Search...')
-                            .input-group-append
-                                .input-group-text
-                                    i.nc-icon.nc-zoom-split
-                    ul.navbar-nav
-                        li.nav-item.btn-rotate.dropdown
-                            a#navbarDropdownMenuLink.nav-link.dropdown-toggle(href='#' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
-                                i.nc-icon.nc-tile-56
-                            .dropdown-menu.dropdown-menu-right(aria-labelledby='navbarDropdownMenuLink')
-                                a.dropdown-item(href='#') Tất cả tài khoản
-                                a.dropdown-item(href='#') Tài khoản Admin
-                                a.dropdown-item(href='#') Tài khoản khách hàng
-                                a.dropdown-item(href='#') Tài khoản bị khóa
         .content
+            .container-fluid
+                .row
+                    .col-md-6
+                        form.ml-2.mb-2.align-self-center
+                            .input-group.no-border
+                                input#myInput.form-control(onkeyup='searchUser()' type='text' name='search' placeholder='Search...')
+                                .input-group-append
+                                    .input-group-text
+                                        i.nc-icon.nc-zoom-split
+                        a.btn.btn-primary.align-self-center(href='/user/insertUser' role='button') Tạo Tài Khoản
+                        .btn-group
+                            button.btn.btn-info(type='button') Lọc 
+                            button.btn.btn-info.dropdown-toggle.dropdown-toggle-split(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+                                span.sr-only Toggle Dropdown
+                            .dropdown-menu
+                                a.dropdown-item(href='/getUser') Tài khoản khách hàng
+                                a.dropdown-item(href='#') Tài khoản nhân viên
+                                a.dropdown-item(href='#') Tài khoản đang bị khóa
             .row
                 .col-md-12
                     .card
                         .card-header
-                            h4.card-title  Quản Lý Người Dùng
+                            h4.card-title  Danh sách người dùng
                         .card-body
                             .table-responsive
-                                table.table
-                                    thead.text-primary
+                                table#myTable
+                                    thead.header.text-primary
                                         th STT
                                         th Tên 
                                         th Số Điện Thoại
@@ -101,7 +102,8 @@ head
                                         each user,index in listUser  
                                             tr
                                                 td= index+1
-                                                td= user.user_name
+                                                td
+                                                    a.text-dark(href='/user/userDetail/?user_id='+user.user_id )= user.user_name
                                                 td= user.phone
                                                 if (user.gender===1)
                                                     td Nam
@@ -113,25 +115,26 @@ head
                                                 else  
                                                     td Bị Khóa
                                                 td
-                                                    a(href='/user/userDetail/?user_id='+user.user_id )
-                                                        li.dropdown-item Xem chi tiết
-                                nav(aria-label='...')
-                                    ul.pagination
-                                        li.page-item
-                                            -var number1=parseInt(pageNumber)-1
-                                            if(number1>0)
-                                                a.page-link(href='/user/?pageNumber='+number1 ) Previous
-                                        each page in listPage
-                                            if(page==pageNumber)
-                                                li.page-item.active
-                                                    a.page-link(href='/user/?pageNumber='+page)=page
-                                                    span.sr-only (current)= index
-                                            else 
-                                                li.page-item
-                                                    a.page-link(href='/user/?pageNumber='+page)= page
-                                        li.page-item
-                                            -var number2= parseInt(pageNumber)+1
-                                            a.page-link(href='/user/?pageNumber='+number2) Next           
+                                                    a.btn.btn-primary(href='/user/userDetail/?user_id='+user.user_id ) Xem chi tiết
+                            nav.d-flex.justify-content-end(aria-label='...')
+                                ul.pagination
+                                    li.page-item
+                                        -var number1=parseInt(pageNumber)-1
+                                        if(number1>0)
+                                            a.page-link(href='/user/?pageNumber='+number1 ) Previous
+                                    each page in listPage
+                                        if(page==pageNumber)
+                                            li.page-item.active
+                                                a.page-link(href='/user/?pageNumber='+page)=page
+                                                span.sr-only (current)= index
+                                        else 
+                                            li.page-item
+                                                a.page-link(href='/user/?pageNumber='+page)= page
+                                    li.page-item
+                                        -var number2= parseInt(pageNumber)+1
+                                        if(number2 <= listPage.length)
+                                            a.page-link(href='/user/?pageNumber='+number2) Next  
+
 // Core JS Files
 script
     include ./assets/js/core/jquery.min.js
@@ -149,10 +152,8 @@ script
     include ./assets/js/paper-dashboard.min.js
 script
     include ./assets/demo/demo.js
-script 
-    include ./assets/js/plugins/bootstrap-notify.js
-// Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc
-script(src='../assets/js/paper-dashboard.min.js?v=2.0.1' type='text/javascript')
-// Paper Dashboard DEMO methods, don't include it in your project!
-script(src='../assets/demo/demo.js')
+script
+    include ./assets/js/main.js
+
+
 
